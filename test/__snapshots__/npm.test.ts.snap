@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`npm semantic-release/@git generates the right commit message for channel next 1`] = `
+"ci(release): test 
+
+This is a test release"
+`;
+
+exports[`npm semantic-release/@git generates the right commit message for channel undefined 1`] = `
+"ci(release): test [skip ci]
+
+This is a test release"
+`;
