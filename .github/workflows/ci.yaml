@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download actionlint
+        run: |
+          mkdir -p "$HOME/bin"
+          bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) latest "$HOME/bin"
+          echo "${HOME}/bin" >> "$GITHUB_PATH"
+      - name: Lint
+        uses: open-turo/actions-node/lint@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        uses: open-turo/actions-node/test@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
