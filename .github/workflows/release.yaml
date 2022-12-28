@@ -14,4 +14,4 @@ jobs:
         uses: open-turo/actions-node/release@v3
         with:
           github-token: ${{ secrets.OPEN_TURO_GITHUB_TOKEN }}
-          npm-token: ${{ secrets.NPM_TOKEN }}
+          npm-token: ${{ secrets.OPEN_TURO_GITHUB_TOKEN }}
