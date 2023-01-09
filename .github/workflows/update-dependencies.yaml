@@ -21,4 +21,3 @@ jobs:
       - uses: open-turo/action-renovate@v1
         with:
           github-token: ${{ secrets.OPEN_TURO_GITHUB_TOKEN }}
-          log-level: debug
