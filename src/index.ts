@@ -58,5 +58,16 @@ export = {
     ],
     "@semantic-release/github",
     "semantic-release-fotingo",
+    [
+      "@semantic-release/exec",
+      {
+        failCmd:
+          "[ -x ./script/semantic-release-fail ] && ./script/semantic-release-fail || true",
+        publishCmd:
+          "[ -x ./script/semantic-release-publish ] && ./script/semantic-release-publish || true",
+        successCmd:
+          "[ -x ./script/semantic-release-success ] && ./script/semantic-release-success || true",
+      },
+    ],
   ],
 };
