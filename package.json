@@ -64,5 +64,5 @@
     "watch": "clean && tsc-watch -w -p ./tsconfig.build.json --compiler ./node_modules/.bin/ttsc"
   },
   "types": "lib/index.d.ts",
-  "version": "1.0.1"
+  "version": "1.1.0-beta-f-add-support-for-exec-1673540848512.1"
 }
