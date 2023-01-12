@@ -60,6 +60,21 @@ of the plugins to work correctly.
   protection rules (see [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule))
 - `NPM_TOKEN`. A NPM token so the package can be published to NPM (a `.npmrc` file with extra configuration can also be used)
 
+### @semantic-release/exec
+
+This preset includes @semantic-release/exec to run custom scripts. It supports scripts for the `publish`, `success`
+and `fail` hooks.
+
+The convention is that the configuration will run the script if there is an executable file
+like `./script/semantic-release-<hook>`.
+
+These scripts must follow the convention of the [@semantic-release/exec](https://github.com/semantic-release/exec#configuration)
+plugin (e.g. in the publish hook, the release information can be written to stdout as parseable JSON, but nothing else).
+
+If there is no file, then this plugin will be a noop.
+
+Scripts don't receive any argument.
+
 ## Development
 
 Install [pre-commit](https://pre-commit.com/) and the commit hooks:
