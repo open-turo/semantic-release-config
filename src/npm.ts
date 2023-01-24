@@ -24,6 +24,7 @@ const getPluginName = (p: typeof config.plugins[number]) => {
  * and creating a Pull Request with version updates in files like package.json
  */
 export = {
+  ...config,
   plugins: [
     ...config.plugins.filter(
       (p) => !pluginsThatGoAtTheEnd.has(getPluginName(p))
