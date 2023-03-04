@@ -1,11 +1,6 @@
-import config from "./";
+import { pluginsThatGoAtTheEnd } from "~/_config";
 
-// We have a set of plugins that ideally should run after every other plugin to guarantee that things like publishing to NPM
-// already happen before these plugins run
-const pluginsThatGoAtTheEnd = new Set([
-  "@semantic-release/exec",
-  "semantic-release-fotingo",
-]);
+import config from "./";
 
 /**
  * Given a semantic release plugin config, return the plugin name
