@@ -25,7 +25,7 @@ describe("npm", () => {
     }
   );
 
-  test("@semantic-release/exec and semantic-release-fotingo aree the last plugins", () => {
+  test("@semantic-release/exec and semantic-release-fotingo are the last plugins", () => {
     expect(npm.plugins[npm.plugins.length - 2]).toBe(
       "semantic-release-fotingo"
     );
