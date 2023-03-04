@@ -1,4 +1,4 @@
-import { pluginsThatGoAtTheEnd } from "~/_config";
+import { pluginsThatGoAtTheEnd, semanticReleaseGit } from "~/_config";
 
 import config from "./";
 
@@ -30,14 +30,12 @@ export = {
         tarballDir: "pack",
       },
     ],
-    [
-      "@semantic-release/git",
-      {
-        assets: ["package.json", "package-lock.json", "README.md", "yarn.lock"],
-        message:
-          "ci(release): ${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>\n\n${nextRelease.notes}",
-      },
-    ],
+    semanticReleaseGit([
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "yarn.lock",
+    ]),
     ...config.plugins.filter((p) =>
       pluginsThatGoAtTheEnd.has(getPluginName(p))
     ),
