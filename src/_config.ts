@@ -1,6 +1,6 @@
 import baseConfig from "~/index";
 
-type SemanticReleasePlugin =
+export type SemanticReleasePlugin =
   | readonly [string, Record<string, unknown>]
   | string;
 

@@ -1,13 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`npm semantic-release/@git generates the right commit message for channel next 1`] = `
-"ci(release): test 
-
-This is a test release"
+exports[`npm adds npm and semantic-release/git plugins 1`] = `
+[
+  "@semantic-release/npm",
+  {
+    "tarballDir": "pack",
+  },
+]
 `;
 
-exports[`npm semantic-release/@git generates the right commit message for channel undefined 1`] = `
-"ci(release): test [skip ci]
+exports[`npm adds npm and semantic-release/git plugins 2`] = `
+[
+  "@semantic-release/git",
+  {
+    "assets": [
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "yarn.lock",
+    ],
+    "message": "ci(release): \${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>
 
-This is a test release"
+\${nextRelease.notes}",
+  },
+]
 `;
