@@ -1,0 +1,115 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`config createPreset creates a preset including the default config 1`] = `
+{
+  "branches": [
+    "main",
+    "+([0-9])?(.{+([0-9]),x}).x",
+    {
+      "channel": "next",
+      "name": "(f|b|c)/*",
+      "prerelease": "beta-\${(/^[a-zA-Z]+-[0-9]+/.exec(name.substr(2)) || [name.replace(/[_/.]/g, '-')])[0]}-\${Date.now()}",
+    },
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "parserOpts": {
+          "noteKeywords": [
+            "BREAKING CHANGE",
+            "BREAKING CHANGES",
+            "BREAKING",
+          ],
+        },
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            {
+              "hidden": false,
+              "section": "Build System",
+              "type": "build",
+            },
+            {
+              "hidden": false,
+              "section": "Miscellaneous",
+              "type": "chore",
+            },
+            {
+              "hidden": false,
+              "section": "Continuous Integration",
+              "type": "ci",
+            },
+            {
+              "hidden": false,
+              "section": "Documentation",
+              "type": "docs",
+            },
+            {
+              "hidden": false,
+              "section": "Features",
+              "type": "feat",
+            },
+            {
+              "hidden": false,
+              "section": "Bug Fixes",
+              "type": "fix",
+            },
+            {
+              "hidden": false,
+              "section": "Performance Improvements",
+              "type": "perf",
+            },
+            {
+              "hidden": false,
+              "section": "Code Refactoring",
+              "type": "refactor",
+            },
+            {
+              "hidden": false,
+              "section": "Styles",
+              "type": "style",
+            },
+            {
+              "hidden": false,
+              "section": "Tests",
+              "type": "test",
+            },
+          ],
+        },
+        "writerOpts": {
+          "commitsSort": [
+            "subject",
+            "scope",
+          ],
+        },
+      },
+    ],
+    "@semantic-release/github",
+    "a",
+    "b",
+    "semantic-release-fotingo",
+    [
+      "@semantic-release/exec",
+      {
+        "failCmd": "[ -x ./script/semantic-release-fail ] && ./script/semantic-release-fail '\${nextRelease.version}' || true",
+        "publishCmd": "[ -x ./script/semantic-release-publish ] && ./script/semantic-release-publish '\${nextRelease.version}' || true",
+        "successCmd": "[ -x ./script/semantic-release-success ] && ./script/semantic-release-success '\${nextRelease.version}' || true",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`config semanticReleaseGit semantic-release/@git generates the right commit message for channel next 1`] = `
+"ci(release): test 
+
+This is a test release"
+`;
+
+exports[`config semanticReleaseGit semantic-release/@git generates the right commit message for channel undefined 1`] = `
+"ci(release): test [skip ci]
+
+This is a test release"
+`;
