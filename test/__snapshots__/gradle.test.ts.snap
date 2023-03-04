@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gradle adds gradle-semantic-release-plugin and semantic-release/git plugins 1`] = `"gradle-semantic-release-plugin"`;
+
+exports[`gradle adds gradle-semantic-release-plugin and semantic-release/git plugins 2`] = `
+[
+  "@semantic-release/git",
+  {
+    "assets": [
+      "gradle.properties",
+      "README.md",
+    ],
+    "message": "ci(release): \${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>
+
+\${nextRelease.notes}",
+  },
+]
+`;
