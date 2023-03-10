@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`openapi adds gradle-semantic-release-plugin, semantic-release/git, and semantic-release-openapi plugins 1`] = `"gradle-semantic-release-plugin"`;
+
+exports[`openapi adds gradle-semantic-release-plugin, semantic-release/git, and semantic-release-openapi plugins 2`] = `
+[
+  "@aensley/semantic-release-openapi",
+  {
+    "apiSpecFiles": [
+      "spec/**/openapi.yaml",
+    ],
+  },
+]
+`;
+
+exports[`openapi adds gradle-semantic-release-plugin, semantic-release/git, and semantic-release-openapi plugins 3`] = `
+[
+  "@semantic-release/git",
+  {
+    "assets": [
+      "gradle.properties",
+      "README.md",
+      "spec/**/openapi.yaml",
+    ],
+    "message": "ci(release): \${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>
+
+\${nextRelease.notes}",
+  },
+]
+`;
