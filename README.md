@@ -22,6 +22,7 @@ yarn add --dev semantic-release @open-turo/semantic-release-config
   and run [semantic-release-fotingo](https://github.com/tagoro9/semantic-release-fotingo).
 - Gradle. All the default configuration in addition to updating the gradle.properties file
 - NPM. All the default configuration in addition to publishing packages to NPM and updates assets like package.json
+- OpenAPI. All the default configuration in addition to updating the gradle.properties and OpenAPI spec files.
 
 ## Usage
 
@@ -66,6 +67,12 @@ of the plugins to work correctly.
   Ensure that the user that is running the release has push rights and can bypass branch
   protection rules (see [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule))
 - `NPM_TOKEN`. A NPM token so the package can be published to NPM (a `.npmrc` file with extra configuration can also be used)
+
+#### OpenAPI
+
+- `GITHUB_TOKEN`. When a new release is published, this plugin will try to commit and push into the released branch.
+  Ensure that the user that is running the release has push rights and can bypass branch
+  protection rules (see [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule))
 
 ### @semantic-release/exec
 
