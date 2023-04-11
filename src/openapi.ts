@@ -4,7 +4,7 @@ import {
   SemanticReleasePlugin,
 } from "~/_config";
 
-const openApiSpecGlob = "spec/*.yaml";
+const openApiSpecGlob = "spec/**/*.yaml";
 
 const semanticReleaseOpenApi = (
   apiSpecFiles: string[]
