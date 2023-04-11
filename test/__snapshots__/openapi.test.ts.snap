@@ -7,7 +7,7 @@ exports[`openapi adds gradle-semantic-release-plugin, semantic-release/git, and 
   "@aensley/semantic-release-openapi",
   {
     "apiSpecFiles": [
-      "spec/**/openapi.yaml",
+      "spec/**/*.yaml",
     ],
   },
 ]
@@ -20,7 +20,7 @@ exports[`openapi adds gradle-semantic-release-plugin, semantic-release/git, and 
     "assets": [
       "gradle.properties",
       "README.md",
-      "spec/**/openapi.yaml",
+      "spec/**/*.yaml",
     ],
     "message": "ci(release): \${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>
 
