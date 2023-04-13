@@ -15,14 +15,21 @@ export const pluginsThatGoAtTheEnd = new Set([
  * Return the configuration for the @semantic-release/git plugin to commit
  * changes in the specified assets
  * @param assets List of assets to commit
+ * @param requireCI to controll when commit requires ci check
  */
-export function semanticReleaseGit(assets: string[]): SemanticReleasePlugin {
+export function semanticReleaseGit(
+  assets: string[],
+  requireCI = false
+): SemanticReleasePlugin {
+  const message = requireCI
+    ? "ci(release): ${nextRelease.version}\n\n${nextRelease.notes}"
+    : "ci(release): ${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>\n\n${nextRelease.notes}";
+
   return [
     "@semantic-release/git",
     {
       assets,
-      message:
-        "ci(release): ${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>\n\n${nextRelease.notes}",
+      message,
     },
   ];
 }

@@ -6,5 +6,5 @@ import { createPreset, semanticReleaseGit } from "~/_config";
  */
 export = createPreset([
   "gradle-semantic-release-plugin",
-  semanticReleaseGit(["gradle.properties", "README.md"]),
+  semanticReleaseGit(["gradle.properties", "README.md"], true),
 ]);
