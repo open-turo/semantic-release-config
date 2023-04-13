@@ -10,7 +10,7 @@ exports[`gradle adds gradle-semantic-release-plugin and semantic-release/git plu
       "gradle.properties",
       "README.md",
     ],
-    "message": "ci(release): \${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>
+    "message": "ci(release): \${nextRelease.version}
 
 \${nextRelease.notes}",
   },
