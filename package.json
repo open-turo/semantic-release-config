@@ -14,8 +14,8 @@
     "semantic-release-fotingo": "^1.7.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.6.1",
-    "@commitlint/config-conventional": "17.6.1",
+    "@commitlint/cli": "17.6.3",
+    "@commitlint/config-conventional": "17.6.3",
     "@open-turo/eslint-config-typescript": "3.0.2",
     "@types/jest": "29.5.1",
     "@types/lodash.template": "4.5.1",
