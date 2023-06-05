@@ -53,7 +53,7 @@
   "main": "lib/index.js",
   "name": "@open-turo/semantic-release-config",
   "peerDependencies": {
-    "semantic-release": ">= 19.0.3"
+    "semantic-release": ">=20.1.0"
   },
   "publishConfig": {
     "access": "public"
