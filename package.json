@@ -16,7 +16,7 @@
   "devDependencies": {
     "@commitlint/cli": "17.6.6",
     "@commitlint/config-conventional": "17.6.6",
-    "@open-turo/eslint-config-typescript": "3.0.2",
+    "@open-turo/eslint-config-typescript": "4.0.0",
     "@types/jest": "29.5.2",
     "@types/lodash.template": "4.5.1",
     "@types/node": "18.16.19",
