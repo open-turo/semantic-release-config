@@ -12,7 +12,7 @@ repos:
             test/.*/__snapshots__/.*snap
           )$
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.7.1
+    rev: v3.0.0
     hooks:
       - id: prettier
         stages: [commit]
