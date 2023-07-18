@@ -8,7 +8,7 @@
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^9.0.0",
     "@semantic-release/npm": "^10.0.0",
-    "@semantic-release/release-notes-generator": "^10.0.3",
+    "@semantic-release/release-notes-generator": "^11.0.4",
     "conventional-changelog-conventionalcommits": "^6.0.0",
     "gradle-semantic-release-plugin": "^1.7.6"
   },
@@ -16,7 +16,7 @@
     "@commitlint/cli": "17.6.6",
     "@commitlint/config-conventional": "17.6.6",
     "@open-turo/eslint-config-typescript": "4.0.0",
-    "@types/jest": "29.5.2",
+    "@types/jest": "29.5.3",
     "@types/lodash.template": "4.5.1",
     "@types/node": "18.16.19",
     "@typescript-eslint/eslint-plugin": "5.62.0",
