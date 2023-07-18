@@ -32,6 +32,6 @@ describe("Branches", () => {
       for (const prerelease of prereleasesToTest) {
         expect(template(prerelease)({ name: branch })).toMatchSnapshot();
       }
-    }
+    },
   );
 });

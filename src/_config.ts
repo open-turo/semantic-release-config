@@ -16,7 +16,7 @@ export const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
  */
 export function semanticReleaseGit(
   assets: string[],
-  requireCI = false
+  requireCI = false,
 ): SemanticReleasePlugin {
   const message = requireCI
     ? "ci(release): ${nextRelease.version}\n\n${nextRelease.notes}"
@@ -53,11 +53,11 @@ export function createPreset(plugins: SemanticReleasePlugin[]) {
     ...baseConfig,
     plugins: [
       ...baseConfig.plugins.filter(
-        (p) => !pluginsThatGoAtTheEnd.has(getPluginName(p))
+        (p) => !pluginsThatGoAtTheEnd.has(getPluginName(p)),
       ),
       ...plugins,
       ...baseConfig.plugins.filter((p) =>
-        pluginsThatGoAtTheEnd.has(getPluginName(p))
+        pluginsThatGoAtTheEnd.has(getPluginName(p)),
       ),
     ],
   };

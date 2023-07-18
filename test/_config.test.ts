@@ -18,7 +18,7 @@ describe("config", () => {
 
     test("@semantic-release/exec is the last plugin", () => {
       expect(preset.plugins[npm.plugins.length - 1][0]).toBe(
-        "@semantic-release/exec"
+        "@semantic-release/exec",
       );
     });
   });
@@ -44,9 +44,9 @@ describe("config", () => {
               channel: channel,
               notes: "This is a test release",
             },
-          })
+          }),
         ).toMatchSnapshot();
-      }
+      },
     );
   });
 });
