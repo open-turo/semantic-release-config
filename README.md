@@ -19,7 +19,6 @@ yarn add --dev semantic-release @open-turo/semantic-release-config
 ## Presets
 
 - Default. Include all changes in the release notes. Allow next releases from branches that start with f/, b/ or c/
-  and run [semantic-release-fotingo](https://github.com/tagoro9/semantic-release-fotingo).
 - Gradle. All the default configuration in addition to updating the gradle.properties file
 - NPM. All the default configuration in addition to publishing packages to NPM and updates assets like package.json
 - OpenAPI. All the default configuration in addition to updating the gradle.properties and OpenAPI spec files.
@@ -52,8 +51,6 @@ of the plugins to work correctly.
 #### Default
 
 - `GITHUB_TOKEN`. A GitHub token so the Github release can be created
-- Fotingo. Refer to [semantic-release-fotingo](https://github.com/tagoro9/semantic-release-fotingo) to see how to
-  properly configure it.
 
 #### Gradle
 

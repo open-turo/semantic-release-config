@@ -16,10 +16,7 @@ describe("config", () => {
       expect(preset).toMatchSnapshot();
     });
 
-    test("@semantic-release/exec and semantic-release-fotingo are the last plugins", () => {
-      expect(preset.plugins[npm.plugins.length - 2]).toBe(
-        "semantic-release-fotingo"
-      );
+    test("@semantic-release/exec is the last plugin", () => {
       expect(preset.plugins[npm.plugins.length - 1][0]).toBe(
         "@semantic-release/exec"
       );
