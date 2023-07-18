@@ -57,7 +57,6 @@ export = {
       },
     ],
     "@semantic-release/github",
-    "semantic-release-fotingo",
     [
       "@semantic-release/exec",
       {

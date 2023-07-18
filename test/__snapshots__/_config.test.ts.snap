@@ -89,7 +89,6 @@ exports[`config createPreset creates a preset including the default config 1`] =
     "@semantic-release/github",
     "a",
     "b",
-    "semantic-release-fotingo",
     [
       "@semantic-release/exec",
       {
