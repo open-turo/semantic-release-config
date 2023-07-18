@@ -7,7 +7,7 @@ import {
 const openApiSpecGlob = "spec/**/*.yaml";
 
 const semanticReleaseOpenApi = (
-  apiSpecFiles: string[]
+  apiSpecFiles: string[],
 ): SemanticReleasePlugin => {
   return [
     "@aensley/semantic-release-openapi",
