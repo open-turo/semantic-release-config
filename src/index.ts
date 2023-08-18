@@ -23,7 +23,14 @@ export = {
     },
   ],
   plugins: [
-    "@semantic-release/commit-analyzer",
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        parserOpts: {
+          noteKeywords: ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"],
+        },
+      },
+    ],
     // We want to use the angular preset, but we want to include all commits in the changelog
     // See https://github.com/semantic-release/release-notes-generator/issues/77
     [
