@@ -66,5 +66,5 @@
     "watch": "clean && tsc-watch -w -p ./tsconfig.build.json --compiler ./node_modules/.bin/tspc"
   },
   "types": "lib/index.d.ts",
-  "version": "3.0.0"
+  "version": "3.0.1-beta-b-try-fixing-config-1692401615498.1"
 }
