@@ -29,9 +29,6 @@ export = {
     [
       "@semantic-release/release-notes-generator",
       {
-        parserOpts: {
-          noteKeywords: ["BREAKING CHANGE", "BREAKING CHANGES", "BREAKING"],
-        },
         preset: "conventionalcommits",
         presetConfig: {
           types: [
