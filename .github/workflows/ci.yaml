@@ -4,6 +4,15 @@ on:
   push:
 
 jobs:
+  release-notes:
+    name: Release notes preview
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    steps:
+      - uses: open-turo/actions-release/release-notes-preview@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   lint:
     runs-on: ubuntu-latest
     name: Lint
@@ -13,22 +22,14 @@ jobs:
           mkdir -p "$HOME/bin"
           bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) latest "$HOME/bin"
           echo "${HOME}/bin" >> "$GITHUB_PATH"
-      - uses: open-turo/actions-node/lint@v3
+      - uses: open-turo/actions-node/lint@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
   test:
     runs-on: ubuntu-latest
     name: Test
     steps:
-      - uses: open-turo/actions-node/test@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-  release-notes:
-    runs-on: ubuntu-latest
-    name: Release notes preview
-    env:
-      NPM_TOKEN: ${{ secrets.OPEN_TURO_NPM_TOKEN }}
-    steps:
-      - uses: open-turo/actions-release/release-notes-preview@v1
+      - uses: open-turo/actions-node/test@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
