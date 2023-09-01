@@ -12,6 +12,8 @@ jobs:
       - uses: open-turo/actions-release/release-notes-preview@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          NPM_TOKEN: ${{ secrets.OPEN_TURO_NPM_TOKEN }}
 
   lint:
     runs-on: ubuntu-latest
