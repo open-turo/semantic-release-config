@@ -13,8 +13,8 @@
     "gradle-semantic-release-plugin": "^1.7.7"
   },
   "devDependencies": {
-    "@commitlint/cli": "17.7.1",
-    "@commitlint/config-conventional": "17.7.0",
+    "@commitlint/cli": "18.0.0",
+    "@commitlint/config-conventional": "18.0.0",
     "@open-turo/eslint-config-typescript": "6.0.0",
     "@types/jest": "29.5.4",
     "@types/lodash.template": "4.5.1",
