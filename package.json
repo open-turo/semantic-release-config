@@ -33,7 +33,7 @@
     "eslint-plugin-sonarjs": "0.21.0",
     "eslint-plugin-sort-destructure-keys": "1.5.0",
     "eslint-plugin-typescript-sort-keys": "3.0.0",
-    "eslint-plugin-unicorn": "48.0.1",
+    "eslint-plugin-unicorn": "49.0.0",
     "jest": "29.6.4",
     "lodash.template": "4.5.0",
     "prettier": "3.0.3",
