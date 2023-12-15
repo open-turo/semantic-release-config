@@ -1,23 +1,13 @@
 name: CI
 
 on:
-  push:
+  workflow_dispatch:
+  pull_request:
 
 jobs:
-  release-notes:
-    name: Release notes preview
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
-    steps:
-      - uses: open-turo/actions-release/release-notes-preview@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          NPM_TOKEN: ${{ secrets.OPEN_TURO_NPM_TOKEN }}
-
   lint:
-    runs-on: ubuntu-latest
     name: Lint
+    runs-on: ubuntu-latest
     steps:
       - name: Download actionlint
         run: |
@@ -27,11 +17,14 @@ jobs:
       - uses: open-turo/actions-node/lint@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
+          npm-token: ${{ secrets.OPEN_TURO_NPM_TOKEN }}
   test:
-    runs-on: ubuntu-latest
     name: Test
+    runs-on: ubuntu-latest
     steps:
       - uses: open-turo/actions-node/test@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-flags: --coverage
+      - name: Upload coverage
+        uses: coverallsapp/github-action@v2
