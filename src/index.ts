@@ -12,16 +12,7 @@
  * The release notes will include all the commits and not just the commits that trigger a release.
  */
 export = {
-  branches: [
-    "main",
-    "+([0-9])?(.{+([0-9]),x}).x",
-    {
-      name: "(f|b|c)/*",
-      channel: "next",
-      prerelease:
-        "beta-${(/^[a-zA-Z]+-[0-9]+/.exec(name.substr(2)) || [name.replace(/[_/.]/g, '-')])[0]}-${Date.now()}",
-    },
-  ],
+  branches: ["main", "+([0-9])?(.{+([0-9]),x}).x"],
   plugins: [
     "@semantic-release/commit-analyzer",
     // We want to use the angular preset, but we want to include all commits in the changelog
