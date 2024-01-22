@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Branches generates the right prerelease names for Turo custom branches: c/this_is_a_branch_that_does_not-follow-any-convention-223434 1`] = `"beta-c-this-is-a-branch-that-does-not-follow-any-convention-223434-1671140834629"`;
-
-exports[`Branches generates the right prerelease names for Turo custom branches: f/project-1234_test_that_semantic_release_works 1`] = `"beta-project-1234-1671140834629"`;
-
-exports[`Branches generates the right prerelease names for Turo custom branches: f/test 1`] = `"beta-f-test-1671140834629"`;
