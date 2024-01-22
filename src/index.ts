@@ -1,13 +1,5 @@
 /**
- * Semantic release configuration. Support beta
- * releases for branches that follow our branch naming convention (branches that start with f/, b/ or c/)
- *
- * If there are tickets referenced in the branch name (in the format <PROJECT>-<TICKET_NUMBER>, only this part of the name
- * will be used for the prerelease name. Otherwise, a sanitized version of the branch name
- * will be used.
- *
- * For any of the prereleases, the current date will be appended. This will guarantee that even if a branch gets rebased
- * and force pushed, we get unique prerelease names.
+ * Semantic release configuration. Supports main and version branch releases
  *
  * The release notes will include all the commits and not just the commits that trigger a release.
  */
