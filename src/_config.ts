@@ -48,14 +48,16 @@ const getPluginName = (plugin: SemanticReleasePlugin) => {
  * plugins that need to stay at the end remain there
  * @param plugins List of plugin configs for the preset
  */
-export function createPreset(plugins: SemanticReleasePlugin[]) {
+export function createPreset(
+  plugins: Array<SemanticReleasePlugin | undefined>,
+) {
   return {
     ...baseConfig,
     plugins: [
       ...baseConfig.plugins.filter(
         (p) => !pluginsThatGoAtTheEnd.has(getPluginName(p)),
       ),
-      ...plugins,
+      ...plugins.filter((plugin) => plugin !== undefined),
       ...baseConfig.plugins.filter((p) =>
         pluginsThatGoAtTheEnd.has(getPluginName(p)),
       ),
