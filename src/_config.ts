@@ -26,10 +26,9 @@ export function semanticReleaseGit(
     ? "ci(release): ${nextRelease.version}\n\n${nextRelease.notes}"
     : "ci(release): ${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>\n\n${nextRelease.notes}";
 
-  if (
-    !process.env.GITHUB_REF ||
-    micromatch.isMatch(process.env.GITHUB_REF || "", baseConfig.branches)
-  ) {
+  // Split refs/heads/branch-name to branch-name. I running in a pull request, then we don't care
+  const branch = process.env.GITHUB_REF?.split("/").pop();
+  if (!branch || micromatch.isMatch(branch || "", baseConfig.branches)) {
     return [
       "@semantic-release/git",
       {
