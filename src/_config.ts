@@ -1,3 +1,7 @@
+import * as process from "node:process";
+
+import micromatch from "micromatch";
+
 import baseConfig from "~/index";
 
 export type SemanticReleasePlugin =
@@ -6,7 +10,7 @@ export type SemanticReleasePlugin =
 
 // We have a set of plugins that ideally should run after every other plugin to guarantee that things like publishing to NPM
 // already happen before these plugins run
-export const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
+const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
 
 /**
  * Return the configuration for the @semantic-release/git plugin to commit
@@ -17,18 +21,24 @@ export const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
 export function semanticReleaseGit(
   assets: string[],
   requireCI = false,
-): SemanticReleasePlugin {
+): SemanticReleasePlugin | undefined {
   const message = requireCI
     ? "ci(release): ${nextRelease.version}\n\n${nextRelease.notes}"
     : "ci(release): ${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>\n\n${nextRelease.notes}";
 
-  return [
-    "@semantic-release/git",
-    {
-      assets,
-      message,
-    },
-  ];
+  if (
+    !process.env.GITHUB_REF ||
+    micromatch.isMatch(process.env.GITHUB_REF || "", baseConfig.branches)
+  ) {
+    return [
+      "@semantic-release/git",
+      {
+        assets,
+        message,
+      },
+    ];
+  }
+  return undefined;
 }
 
 /**
@@ -57,7 +67,9 @@ export function createPreset(
       ...baseConfig.plugins.filter(
         (p) => !pluginsThatGoAtTheEnd.has(getPluginName(p)),
       ),
-      ...plugins.filter((plugin) => plugin !== undefined),
+      ...plugins.filter(
+        (plugin): plugin is SemanticReleasePlugin => plugin !== undefined,
+      ),
       ...baseConfig.plugins.filter((p) =>
         pluginsThatGoAtTheEnd.has(getPluginName(p)),
       ),
