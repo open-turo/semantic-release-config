@@ -1,22 +1,24 @@
-import {
-  createPreset,
-  semanticReleaseGit,
-  SemanticReleasePlugin,
-} from "~/_config";
-import npm from "~/npm";
 import template = require("lodash.template");
+import { SemanticReleasePlugin } from "~/_config";
 
 describe("config", () => {
+  let config: typeof import("~/_config");
+
+  beforeEach(async () => {
+    config = await import("~/_config");
+  });
+
   describe("createPreset", () => {
     let preset: { plugins: SemanticReleasePlugin[] };
     beforeEach(() => {
-      preset = createPreset(["a", "b"]);
+      preset = config.createPreset(["a", "b"]);
     });
     test("creates a preset including the default config", () => {
       expect(preset).toMatchSnapshot();
     });
 
-    test("@semantic-release/exec is the last plugin", () => {
+    test("@semantic-release/exec is the last plugin", async () => {
+      const npm = await import("~/npm");
       expect(preset.plugins[npm.plugins.length - 1][0]).toBe(
         "@semantic-release/exec",
       );
@@ -28,7 +30,7 @@ describe("config", () => {
       "semantic-release/@git generates the right commit message for channel %s",
       (channel) => {
         const assets = ["a"];
-        const gitPlugin = semanticReleaseGit(assets);
+        const gitPlugin = config.semanticReleaseGit(assets);
         const pluginConfig = ((gitPlugin && gitPlugin[1]) || {
           assets: [],
           message: "",

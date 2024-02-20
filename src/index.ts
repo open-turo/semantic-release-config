@@ -3,6 +3,7 @@
  *
  * The release notes will include all the commits and not just the commits that trigger a release.
  */
+
 export = {
   branches: ["main", "+([0-9])?(.{+([0-9]),x}).x"],
   plugins: [
