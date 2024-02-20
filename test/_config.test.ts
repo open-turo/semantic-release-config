@@ -19,9 +19,7 @@ describe("config", () => {
 
     test("@semantic-release/exec is the last plugin", async () => {
       const npm = await import("~/npm");
-      expect(preset.plugins[npm.plugins.length - 1][0]).toBe(
-        "@semantic-release/exec",
-      );
+      expect(npm.plugins.at(-1)![0]).toBe("@semantic-release/exec");
     });
   });
 
