@@ -6,6 +6,7 @@ const config = {
     "~test/*": ["./test/*"],
   },
   preset: "ts-jest",
+  setupFilesAfterEnv: ["<rootDir>test/setup-tests.ts"],
   transform: {
     "^.+\\.tsx?$": "ts-jest",
   },
