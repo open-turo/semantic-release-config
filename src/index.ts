@@ -37,7 +37,16 @@ export = {
         },
       },
     ],
-    "@semantic-release/github",
+    [
+      "@semantic-release/github",
+      {
+        failComment: false,
+        failTitle: false,
+        labels: false,
+        releasedLabels: false,
+        successComment: false,
+      },
+    ],
     [
       "@semantic-release/exec",
       {
