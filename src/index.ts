@@ -5,7 +5,7 @@
  */
 
 export = {
-  branches: ["main", "+([0-9])?(.{+([0-9]),x}).x"],
+  branches: ["main", "master", "+([0-9])?(.{+([0-9]),x}).x"],
   plugins: [
     "@semantic-release/commit-analyzer",
     // We want to use the angular preset, but we want to include all commits in the changelog
