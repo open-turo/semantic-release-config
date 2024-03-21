@@ -68,5 +68,5 @@
     "watch": "clean && tsc-watch -w -p ./tsconfig.build.json --compiler ./node_modules/.bin/tspc"
   },
   "types": "lib/index.d.ts",
-  "version": "6.1.1"
+  "version": "6.1.2"
 }
