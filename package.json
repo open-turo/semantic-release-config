@@ -30,7 +30,7 @@
     "ts-patch": "3.2.1",
     "tsc-watch": "6.2.0",
     "typescript": "5.5.4",
-    "typescript-transform-paths": "3.4.7"
+    "typescript-transform-paths": "3.4.10"
   },
   "engines": {
     "node": ">= 20.8.1"
