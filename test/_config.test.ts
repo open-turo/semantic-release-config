@@ -1,4 +1,5 @@
-import template = require("lodash.template");
+import { template } from "lodash";
+
 import { SemanticReleasePlugin } from "~/_config";
 
 describe("config", () => {
