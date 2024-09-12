@@ -1,7 +1,7 @@
 import {
   createPreset,
   semanticReleaseGit,
-  SemanticReleasePlugin,
+  type SemanticReleasePlugin,
 } from "~/_config";
 
 const openApiSpecGlob = "spec/**/*.yaml";
