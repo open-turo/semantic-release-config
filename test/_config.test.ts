@@ -1,6 +1,15 @@
+import { execSync } from "node:child_process";
+
 import { template } from "lodash";
 
-import { SemanticReleasePlugin } from "~/_config";
+import {
+  createPluginIfFilesExist,
+  type SemanticReleasePlugin,
+} from "~/_config";
+
+jest.mock("node:child_process", () => ({
+  execSync: jest.fn(),
+}));
 
 describe("config", () => {
   let config: typeof import("~/_config");
@@ -49,5 +58,25 @@ describe("config", () => {
         ).toMatchSnapshot();
       },
     );
+  });
+
+  describe("createPluginIfFilesExist", () => {
+    beforeEach(() => {
+      (execSync as jest.Mock).mockImplementation((cmd) => {
+        if (String(cmd).includes("package.json")) {
+          throw new Error("fatal: Not a valid object name HEAD:package.json");
+        }
+      });
+    });
+
+    test("returns undefined if the repo doesn't contain the file", () => {
+      expect(createPluginIfFilesExist(["package.json"], "a")).toBeUndefined();
+    });
+
+    test("returns the plugin if the repo contains any of the files", () => {
+      expect(createPluginIfFilesExist(["package.json", "yarn.lock"], "a")).toBe(
+        "a",
+      );
+    });
   });
 });

@@ -1,3 +1,4 @@
+import { execSync } from "node:child_process";
 import * as process from "node:process";
 
 import micromatch from "micromatch";
@@ -51,6 +52,38 @@ const getPluginName = (plugin: SemanticReleasePlugin) => {
   }
   return plugin[0];
 };
+
+/**
+ * Check if a file is in the Git repository
+ * @param filePath Path to the file
+ * @param repoPath Path to the Git repository
+ */
+function doesGitRepoContainFile(filePath: string, repoPath = process.cwd()) {
+  try {
+    // eslint-disable-next-line sonarjs/os-command
+    execSync(`git cat-file -e HEAD:${filePath}`, {
+      cwd: repoPath,
+      stdio: "ignore",
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Conditionally create a semantic release plugin if any of the specified files exist in the Git repository
+ * @param files List of files to check
+ * @param plugin Plugin to create
+ */
+export function createPluginIfFilesExist(
+  files: string[],
+  plugin: SemanticReleasePlugin,
+): SemanticReleasePlugin | undefined {
+  return files.some((file) => doesGitRepoContainFile(file))
+    ? plugin
+    : undefined;
+}
 
 /**
  * Create a preset that extends the default configuration ensuring that
