@@ -1,6 +1,5 @@
-import { execSync } from "node:child_process";
-
 import { template } from "lodash";
+import { execSync } from "node:child_process";
 
 import {
   createPluginIfFilesExist,
@@ -12,6 +11,7 @@ jest.mock("node:child_process", () => ({
 }));
 
 describe("config", () => {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   let config: typeof import("~/_config");
 
   beforeEach(async () => {
@@ -50,9 +50,9 @@ describe("config", () => {
         expect(
           template(pluginConfig.message || "")({
             nextRelease: {
-              version: "test",
               channel: channel,
               notes: "This is a test release",
+              version: "test",
             },
           }),
         ).toMatchSnapshot();

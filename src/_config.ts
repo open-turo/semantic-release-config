@@ -1,7 +1,6 @@
+import micromatch from "micromatch";
 import { execSync } from "node:child_process";
 import * as process from "node:process";
-
-import micromatch from "micromatch";
 
 import baseConfig from "~/index";
 
@@ -54,24 +53,6 @@ const getPluginName = (plugin: SemanticReleasePlugin) => {
 };
 
 /**
- * Check if a file is in the Git repository
- * @param filePath Path to the file
- * @param repoPath Path to the Git repository
- */
-function doesGitRepoContainFile(filePath: string, repoPath = process.cwd()) {
-  try {
-    // eslint-disable-next-line sonarjs/os-command
-    execSync(`git cat-file -e HEAD:${filePath}`, {
-      cwd: repoPath,
-      stdio: "ignore",
-    });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
  * Conditionally create a semantic release plugin if any of the specified files exist in the Git repository
  * @param files List of files to check
  * @param plugin Plugin to create
@@ -107,4 +88,22 @@ export function createPreset(
       ),
     ],
   };
+}
+
+/**
+ * Check if a file is in the Git repository
+ * @param filePath Path to the file
+ * @param repoPath Path to the Git repository
+ */
+function doesGitRepoContainFile(filePath: string, repoPath = process.cwd()) {
+  try {
+    // eslint-disable-next-line sonarjs/os-command
+    execSync(`git cat-file -e HEAD:${filePath}`, {
+      cwd: repoPath,
+      stdio: "ignore",
+    });
+    return true;
+  } catch {
+    return false;
+  }
 }

@@ -15,7 +15,14 @@ repos:
     rev: v3.1.0
     hooks:
       - id: prettier
-        stages: [commit]
+        additional_dependencies: ["prettier@3.5.1"]
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v9.26.0
+    hooks:
+      - id: eslint
+        args: [--fix, --quiet]
+        files: eslint\.config\.(js|mjs)|(src|test)\/.*\.(ts|tsx|js|jsx|json|mjs)?$
+        types: [file]
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
     rev: v9.22.0
     hooks:
