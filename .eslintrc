@@ -1,3 +1,0 @@
-{
-  "extends": ["@open-turo/eslint-config-typescript"]
-}
