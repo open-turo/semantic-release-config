@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gradle-and-npm adds gradle-semantic-release-plugin, semantic-release/npm, and semantic-release/git plugins 1`] = `"gradle-semantic-release-plugin"`;
+
+exports[`gradle-and-npm adds gradle-semantic-release-plugin, semantic-release/npm, and semantic-release/git plugins 2`] = `
+[
+  "@semantic-release/npm",
+  {
+    "tarballDir": "pack",
+  },
+]
+`;
+
+exports[`gradle-and-npm adds gradle-semantic-release-plugin, semantic-release/npm, and semantic-release/git plugins 3`] = `
+[
+  "@semantic-release/git",
+  {
+    "assets": [
+      "README.md",
+      "gradle.properties",
+      "package-lock.json",
+      "package.json",
+      "yarn.lock",
+    ],
+    "message": "ci(release): \${nextRelease.version} <% nextRelease.channel !== 'next' ? print('[skip ci]') : print('') %>
+
+\${nextRelease.notes}",
+  },
+]
+`;
+
+exports[`gradle-and-npm adds gradle-semantic-release-plugin, semantic-release/npm, and semantic-release/git plugins 4`] = `
+[
+  "@semantic-release/exec",
+  {
+    "failCmd": "[ -x ./script/semantic-release-fail ] && ./script/semantic-release-fail '\${nextRelease.version}' || true",
+    "publishCmd": "[ -x ./script/semantic-release-publish ] && ./script/semantic-release-publish '\${nextRelease.version}' || true",
+    "successCmd": "[ -x ./script/semantic-release-success ] && ./script/semantic-release-success '\${nextRelease.version}' || true",
+  },
+]
+`;
