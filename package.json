@@ -2,7 +2,7 @@
   "author": "Turo engineering",
   "description": "Turo semantic-release configuration",
   "dependencies": {
-    "@aensley/semantic-release-openapi": "^1.1.8",
+    "@aensley/semantic-release-openapi": "1.1.8",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^7.0.0",
     "@semantic-release/git": "^10.0.1",
