@@ -2,7 +2,6 @@
   "author": "Turo engineering",
   "description": "Turo semantic-release configuration",
   "dependencies": {
-    "@aensley/semantic-release-openapi": "1.4.1",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^7.0.0",
     "@semantic-release/git": "^10.0.1",
@@ -11,7 +10,8 @@
     "@semantic-release/release-notes-generator": "^14.0.1",
     "conventional-changelog-conventionalcommits": "^9.0.0",
     "gradle-semantic-release-plugin": "^1.10.0",
-    "micromatch": "^4.0.5"
+    "micromatch": "^4.0.5",
+    "semantic-release-openapi": "1.5.1"
   },
   "devDependencies": {
     "@open-turo/eslint-config-typescript": "17.0.12",
