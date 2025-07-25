@@ -2,7 +2,7 @@
   "author": "Turo engineering",
   "description": "Turo semantic-release configuration",
   "dependencies": {
-    "@aensley/semantic-release-openapi": "1.1.8",
+    "@aensley/semantic-release-openapi": "1.4.1",
     "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^7.0.0",
     "@semantic-release/git": "^10.0.1",
@@ -19,7 +19,7 @@
     "@types/lodash.template": "4.5.3",
     "@types/micromatch": "4.0.9",
     "@types/node": "22.16.5",
-    "eslint": "9.31.0",
+    "eslint": "9.32.0",
     "jest": "30.0.5",
     "lodash": "4.17.21",
     "prettier": "3.6.2",
