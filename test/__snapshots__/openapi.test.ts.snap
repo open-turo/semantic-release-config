@@ -13,7 +13,7 @@ exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, sema
 
 exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 3`] = `
 [
-  "@aensley/semantic-release-openapi",
+  "semantic-release-openapi",
   {
     "apiSpecFiles": [
       "spec/**/*.yaml",
