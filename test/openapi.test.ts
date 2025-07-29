@@ -6,7 +6,7 @@ jest.mock("node:child_process", () => ({
 
 describe("openapi", () => {
   test("adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins", async () => {
-    (execSync as jest.Mock).mockImplementation(() => {});
+    jest.mocked(execSync).mockImplementation(() => "");
     const openapi = await import("~/openapi");
     const gradlePlugin = openapi.plugins[3];
     const npmPlugin = openapi.plugins[4];

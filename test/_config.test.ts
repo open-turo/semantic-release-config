@@ -6,6 +6,20 @@ import {
   type SemanticReleasePlugin,
 } from "~/_config";
 
+interface GitPluginConfig {
+  assets: string[];
+  message: string;
+}
+
+function isGitPluginConfig(object: unknown): object is GitPluginConfig {
+  return (
+    typeof object === "object" &&
+    object !== null &&
+    "assets" in object &&
+    "message" in object
+  );
+}
+
 jest.mock("node:child_process", () => ({
   execSync: jest.fn(),
 }));
@@ -39,13 +53,14 @@ describe("config", () => {
       (channel) => {
         const assets = ["a"];
         const gitPlugin = config.semanticReleaseGit(assets);
-        const pluginConfig = ((gitPlugin && gitPlugin[1]) || {
-          assets: [],
-          message: "",
-        }) as {
-          assets: [];
-          message: string;
-        };
+        const pluginConfig =
+          gitPlugin && isGitPluginConfig(gitPlugin[1])
+            ? gitPlugin[1]
+            : {
+                assets: [],
+                message: "",
+              };
+
         expect(pluginConfig.assets).toBe(assets);
         expect(
           template(pluginConfig.message || "")({
@@ -62,10 +77,11 @@ describe("config", () => {
 
   describe("createPluginIfFilesExist", () => {
     beforeEach(() => {
-      (execSync as jest.Mock).mockImplementation((cmd) => {
+      jest.mocked(execSync).mockImplementation((cmd) => {
         if (String(cmd).includes("package.json")) {
           throw new Error("fatal: Not a valid object name HEAD:package.json");
         }
+        return "";
       });
     });
 

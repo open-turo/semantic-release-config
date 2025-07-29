@@ -14,7 +14,7 @@
     "micromatch": "^4.0.5"
   },
   "devDependencies": {
-    "@open-turo/eslint-config-typescript": "17.0.12",
+    "@open-turo/eslint-config-typescript": "18.0.0",
     "@types/jest": "30.0.0",
     "@types/lodash.template": "4.5.3",
     "@types/micromatch": "4.0.9",
