@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`gradle adds gradle-semantic-release-plugin and semantic-release/git plugins 1`] = `"gradle-semantic-release-plugin"`;
 
