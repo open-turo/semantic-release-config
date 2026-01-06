@@ -48,7 +48,8 @@
     "build": "tspc -p ./tsconfig.build.json",
     "clean": "rimraf lib",
     "lint": "eslint",
-    "test": "jest",
+    "pretest": "npm run build",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
     "watch": "clean && tsc-watch -w -p ./tsconfig.build.json --compiler ./node_modules/.bin/tspc"
   },
   "types": "lib/index.d.ts",
