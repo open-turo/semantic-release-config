@@ -43,6 +43,7 @@ describe("config", () => {
 
     test("@semantic-release/exec is the last plugin", async () => {
       const npm = await import("~/npm");
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       expect(npm.plugins.at(-1)![0]).toBe("@semantic-release/exec");
     });
   });
@@ -78,7 +79,7 @@ describe("config", () => {
   describe("createPluginIfFilesExist", () => {
     beforeEach(() => {
       jest.mocked(execSync).mockImplementation((cmd) => {
-        if (String(cmd).includes("package.json")) {
+        if (cmd.includes("package.json")) {
           throw new Error("fatal: Not a valid object name HEAD:package.json");
         }
         return "";

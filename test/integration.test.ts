@@ -23,7 +23,7 @@ interface CapturedOutput {
 }
 
 interface SemanticReleaseConfig {
-  branches: Array<{ [key: string]: unknown; name: string } | string>;
+  branches: Array<string | { [key: string]: unknown; name: string }>;
   plugins: Array<[string, Record<string, unknown>] | string>;
 }
 
@@ -33,6 +33,7 @@ type SemanticReleaseFunction = (
 ) => Promise<SemanticReleaseResult>;
 
 type SemanticReleaseResult =
+  | false
   | {
       commits: Array<{
         [key: string]: unknown;
@@ -53,8 +54,7 @@ type SemanticReleaseResult =
         version: string;
       };
       releases: Array<{ [key: string]: unknown }>;
-    }
-  | false;
+    };
 
 interface TestRepoOptions {
   files?: Record<string, string>;
@@ -210,7 +210,7 @@ function loadConfig(preset: string, cwd?: string): SemanticReleaseConfig {
     ? path.join(PROJECT_ROOT, "lib", `${preset}.js`)
     : path.join(PROJECT_ROOT, "lib", "index.js");
 
-  // eslint-disable-next-line unicorn/prefer-module
+  // eslint-disable-next-line unicorn/prefer-module, @typescript-eslint/no-dynamic-delete
   delete require.cache[require.resolve(configPath)];
 
   // Change to the specified directory if provided
@@ -280,7 +280,7 @@ async function runSemanticRelease(
     };
   } catch (error) {
     throw new Error(
-      `Semantic release failed: ${error}\nstdout: ${stdout.output.join("")}\nstderr: ${stderr.output.join("")}`,
+      `Semantic release failed: ${String(error)}\nstdout: ${stdout.output.join("")}\nstderr: ${stderr.output.join("")}`,
     );
   } finally {
     process.chdir(originalCwd);
