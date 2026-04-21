@@ -4,7 +4,7 @@ describe("npm", () => {
   });
 
   test("adds npm and semantic-release/git plugins", async () => {
-    const npm = await import("~/npm");
+    const { config: npm } = await import("~/npm");
     expect(npm.plugins).toHaveLength(6);
     const npmPlugin = npm.plugins[3];
     const semanticReleasePlugin = npm.plugins[4];
@@ -16,7 +16,7 @@ describe("npm", () => {
     "does not add npm and semantic-release/git plugins when not running on a default branch",
     async (branch) => {
       process.env.GITHUB_REF = branch;
-      const npm = await import("~/npm");
+      const { config: npm } = await import("~/npm");
       expect(npm.plugins).toHaveLength(5);
     },
   );

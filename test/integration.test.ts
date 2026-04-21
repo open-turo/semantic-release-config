@@ -220,8 +220,8 @@ function loadConfig(preset: string, cwd?: string): SemanticReleaseConfig {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-require-imports, unicorn/prefer-module
-    return require(configPath) as SemanticReleaseConfig;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/consistent-type-assertions, unicorn/prefer-module
+    return require(configPath).config as SemanticReleaseConfig;
   } finally {
     if (cwd) {
       process.chdir(originalCwd);
@@ -330,7 +330,7 @@ paths: {}`,
       expect(result.nextRelease.type).toBe("patch");
       expect(result.nextRelease.version).toBe("0.0.1");
       expect(result.commits).toHaveLength(1);
-      expect(result.commits[0].message).toContain(message);
+      expect(result.commits.at(0)?.message).toContain(message);
       expect(result.nextRelease.notes).toBeDefined();
       expect(result.nextRelease.notes?.length).toBeGreaterThan(0);
     },

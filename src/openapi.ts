@@ -22,7 +22,7 @@ const semanticReleaseOpenApi = (
  * Semantic release configuration preset for OpenAPI projects. It adds the semantic-release-openapi plugin,
  * and conditionally the npm and gradle plugins based on the presence of relevant files.
  */
-export = createPreset([
+export const config = createPreset([
   createPluginIfFilesExist(
     ["build.gradle", "build.gradle.kts"],
     "gradle-semantic-release-plugin",

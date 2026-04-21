@@ -7,11 +7,11 @@ jest.mock("node:child_process", () => ({
 describe("gradle-and-npm", () => {
   test("adds gradle-semantic-release-plugin, semantic-release/npm, and semantic-release/git plugins", async () => {
     jest.mocked(execSync).mockImplementation(() => "");
-    const openapi = await import("~/gradle-and-npm");
-    const gradlePlugin = openapi.plugins[3];
-    const npmPlugin = openapi.plugins[4];
-    const openApiPlugin = openapi.plugins[5];
-    const semanticReleasePlugin = openapi.plugins[6];
+    const { config: gradleAndNpm } = await import("~/gradle-and-npm");
+    const gradlePlugin = gradleAndNpm.plugins[3];
+    const npmPlugin = gradleAndNpm.plugins[4];
+    const openApiPlugin = gradleAndNpm.plugins[5];
+    const semanticReleasePlugin = gradleAndNpm.plugins[6];
     expect(gradlePlugin).toMatchSnapshot();
     expect(npmPlugin).toMatchSnapshot();
     expect(openApiPlugin).toMatchSnapshot();

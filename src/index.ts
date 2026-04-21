@@ -4,7 +4,7 @@
  * The release notes will include all the commits and not just the commits that trigger a release.
  */
 
-export = {
+const config = {
   branches: ["main", "master", "+([0-9])?(.{+([0-9]),x}).x"],
   plugins: [
     "@semantic-release/commit-analyzer",
@@ -60,3 +60,5 @@ export = {
     ],
   ],
 } as const;
+
+export { config };
