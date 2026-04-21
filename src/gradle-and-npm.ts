@@ -12,7 +12,7 @@ import {
 /**
  * Semantic release configuration preset for projects that release with Gradle and NPM.
  */
-export = createPreset([
+export const config = createPreset([
   createPluginIfFilesExist(
     ["build.gradle", "build.gradle.kts"],
     "gradle-semantic-release-plugin",

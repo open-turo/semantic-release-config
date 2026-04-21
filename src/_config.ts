@@ -2,7 +2,7 @@ import micromatch from "micromatch";
 import { execSync } from "node:child_process";
 import * as process from "node:process";
 
-import baseConfig from "~/index";
+import { config as baseConfig } from "~/index";
 
 export type SemanticReleasePlugin =
   | readonly [string, Record<string, unknown>]
