@@ -35,6 +35,7 @@
     "node": ">= 20.8.1"
   },
   "license": "MIT",
+  "type": "module",
   "main": "lib/index.js",
   "name": "@open-turo/semantic-release-config",
   "peerDependencies": {

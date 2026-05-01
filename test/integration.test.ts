@@ -2,7 +2,6 @@ import type { Config, Options, Result } from "semantic-release";
 
 import { execSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
-import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { PassThrough } from "node:stream";
@@ -20,8 +19,6 @@ const PROJECT_ROOT = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
 );
-
-const esmRequire = createRequire(import.meta.url);
 
 /**
  * Captured output from semantic-release execution
@@ -183,13 +180,13 @@ async function getSemanticRelease(): Promise<SemanticReleaseFunction> {
  * Load a semantic-release configuration preset
  * For presets that use conditional plugins (like gradle-and-npm), files must exist in the CWD
  */
-function loadConfig(preset: string, cwd?: string): SemanticReleaseConfig {
+async function loadConfig(
+  preset: string,
+  cwd?: string,
+): Promise<SemanticReleaseConfig> {
   const configPath = preset
     ? path.join(PROJECT_ROOT, "lib", `${preset}.js`)
     : path.join(PROJECT_ROOT, "lib", "index.js");
-
-  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-  delete esmRequire.cache[esmRequire.resolve(configPath)];
 
   // Change to the specified directory if provided
   const originalCwd = process.cwd();
@@ -198,8 +195,13 @@ function loadConfig(preset: string, cwd?: string): SemanticReleaseConfig {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/consistent-type-assertions
-    return esmRequire(configPath).config as SemanticReleaseConfig;
+    // Use a cache-busting query parameter to force fresh evaluation
+    const configUrl = `file://${configPath}?t=${String(Date.now())}`;
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const module = (await import(/* @vite-ignore */ configUrl)) as {
+      config: SemanticReleaseConfig;
+    };
+    return module.config;
   } finally {
     if (cwd) {
       process.chdir(originalCwd);
@@ -292,7 +294,7 @@ paths: {}`,
       const message = "fix: add open api spec";
       addCommit(repoDirectory, message);
 
-      const config = loadConfig(preset);
+      const config = await loadConfig(preset);
       const { result } = await runSemanticRelease(repoDirectory, config);
 
       expect(result).not.toBe(false);
