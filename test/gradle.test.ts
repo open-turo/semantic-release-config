@@ -1,3 +1,5 @@
+import { describe, expect, test } from "vitest";
+
 describe("gradle", () => {
   test("adds gradle-semantic-release-plugin and semantic-release/git plugins", async () => {
     const { config: gradle } = await import("~/gradle");

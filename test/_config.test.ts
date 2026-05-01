@@ -1,5 +1,6 @@
 import { template } from "lodash";
 import { execSync } from "node:child_process";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import {
   createPluginIfFilesExist,
@@ -20,8 +21,8 @@ function isGitPluginConfig(object: unknown): object is GitPluginConfig {
   );
 }
 
-jest.mock("node:child_process", () => ({
-  execSync: jest.fn(),
+vi.mock("node:child_process", () => ({
+  execSync: vi.fn(),
 }));
 
 describe("config", () => {
@@ -78,8 +79,8 @@ describe("config", () => {
 
   describe("createPluginIfFilesExist", () => {
     beforeEach(() => {
-      jest.mocked(execSync).mockImplementation((cmd) => {
-        if (cmd.includes("package.json")) {
+      vi.mocked(execSync).mockImplementation((cmd) => {
+        if (typeof cmd === "string" && cmd.includes("package.json")) {
           throw new Error("fatal: Not a valid object name HEAD:package.json");
         }
         return "";

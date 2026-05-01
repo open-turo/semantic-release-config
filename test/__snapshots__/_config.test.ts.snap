@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`config createPreset creates a preset including the default config 1`] = `
+exports[`config > createPreset > creates a preset including the default config 1`] = `
 {
   "branches": [
     "main",
@@ -99,13 +99,13 @@ exports[`config createPreset creates a preset including the default config 1`] =
 }
 `;
 
-exports[`config semanticReleaseGit semantic-release/@git generates the right commit message for channel next 1`] = `
+exports[`config > semanticReleaseGit > semantic-release/@git generates the right commit message for channel next 1`] = `
 "ci(release): test 
 
 This is a test release"
 `;
 
-exports[`config semanticReleaseGit semantic-release/@git generates the right commit message for channel undefined 1`] = `
+exports[`config > semanticReleaseGit > semantic-release/@git generates the right commit message for channel undefined 1`] = `
 "ci(release): test [skip ci]
 
 This is a test release"

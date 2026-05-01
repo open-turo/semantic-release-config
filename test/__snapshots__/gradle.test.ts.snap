@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`gradle adds gradle-semantic-release-plugin and semantic-release/git plugins 1`] = `"gradle-semantic-release-plugin"`;
+exports[`gradle > adds gradle-semantic-release-plugin and semantic-release/git plugins 1`] = `"gradle-semantic-release-plugin"`;
 
-exports[`gradle adds gradle-semantic-release-plugin and semantic-release/git plugins 2`] = `
+exports[`gradle > adds gradle-semantic-release-plugin and semantic-release/git plugins 2`] = `
 [
   "@semantic-release/git",
   {

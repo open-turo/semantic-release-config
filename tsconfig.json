@@ -32,7 +32,7 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "types": ["node", "jest"],
+    "types": ["node"],
     "jsx": "react"
   },
   "include": ["src", "test"]
