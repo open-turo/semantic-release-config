@@ -37,6 +37,13 @@
   "license": "MIT",
   "type": "module",
   "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./npm": "./lib/npm.js",
+    "./gradle": "./lib/gradle.js",
+    "./gradle-and-npm": "./lib/gradle-and-npm.js",
+    "./openapi": "./lib/openapi.js"
+  },
   "name": "@open-turo/semantic-release-config",
   "peerDependencies": {
     "semantic-release": ">=24"
