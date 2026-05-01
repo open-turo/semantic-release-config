@@ -12,7 +12,8 @@ import {
 /**
  * Semantic release configuration preset for projects that release with Gradle and NPM.
  */
-export const config = createPreset([
+// eslint-disable-next-line import/no-default-export
+export default createPreset([
   createPluginIfFilesExist(
     ["build.gradle", "build.gradle.kts"],
     "gradle-semantic-release-plugin",

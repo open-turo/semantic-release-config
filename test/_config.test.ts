@@ -43,7 +43,7 @@ describe("config", () => {
     });
 
     test("@semantic-release/exec is the last plugin", async () => {
-      const { config: npm } = await import("~/npm");
+      const { default: npm } = await import("~/npm");
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       expect(npm.plugins.at(-1)![0]).toBe("@semantic-release/exec");
     });

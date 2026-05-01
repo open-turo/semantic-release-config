@@ -199,9 +199,9 @@ async function loadConfig(
     const configUrl = `file://${configPath}?t=${String(Date.now())}`;
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const module = (await import(/* @vite-ignore */ configUrl)) as {
-      config: SemanticReleaseConfig;
+      default: SemanticReleaseConfig;
     };
-    return module.config;
+    return module.default;
   } finally {
     if (cwd) {
       process.chdir(originalCwd);
