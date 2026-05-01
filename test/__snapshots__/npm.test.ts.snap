@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`npm adds npm and semantic-release/git plugins 1`] = `
+exports[`npm > adds npm and semantic-release/git plugins 1`] = `
 [
   "@semantic-release/npm",
   {
@@ -9,7 +9,7 @@ exports[`npm adds npm and semantic-release/git plugins 1`] = `
 ]
 `;
 
-exports[`npm adds npm and semantic-release/git plugins 2`] = `
+exports[`npm > adds npm and semantic-release/git plugins 2`] = `
 [
   "@semantic-release/git",
   {

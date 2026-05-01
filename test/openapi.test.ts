@@ -1,12 +1,13 @@
 import { execSync } from "node:child_process";
+import { describe, expect, test, vi } from "vitest";
 
-jest.mock("node:child_process", () => ({
-  execSync: jest.fn(),
+vi.mock("node:child_process", () => ({
+  execSync: vi.fn(),
 }));
 
 describe("openapi", () => {
   test("adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins", async () => {
-    jest.mocked(execSync).mockImplementation(() => "");
+    vi.mocked(execSync).mockImplementation(() => "");
     const { config: openapi } = await import("~/openapi");
     const gradlePlugin = openapi.plugins[3];
     const npmPlugin = openapi.plugins[4];

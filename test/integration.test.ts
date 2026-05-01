@@ -1,8 +1,13 @@
+import type { Config, Options, Result } from "semantic-release";
+
 import { execSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { PassThrough } from "node:stream";
+import { fileURLToPath } from "node:url";
+import { describe, expect, test } from "vitest";
 
 /**
  * Integration tests that validate semantic-release configurations by actually running
@@ -11,8 +16,12 @@ import { PassThrough } from "node:stream";
  * the plugins we use, and this is just a simple test to ensure correctness of our semantic-release config
  */
 
-// eslint-disable-next-line unicorn/prefer-module
-const PROJECT_ROOT = path.join(__dirname, "..");
+const PROJECT_ROOT = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
+
+const esmRequire = createRequire(import.meta.url);
 
 /**
  * Captured output from semantic-release execution
@@ -28,33 +37,9 @@ interface SemanticReleaseConfig {
 }
 
 type SemanticReleaseFunction = (
-  options: Record<string, unknown>,
-  config: Record<string, unknown>,
-) => Promise<SemanticReleaseResult>;
-
-type SemanticReleaseResult =
-  | false
-  | {
-      commits: Array<{
-        [key: string]: unknown;
-        message: string;
-      }>;
-      lastRelease: {
-        channels: string[];
-        gitHead: string;
-        gitTag: string;
-        name: string;
-        version: string;
-      };
-      nextRelease: {
-        [key: string]: unknown;
-        channel?: null | string;
-        notes?: string;
-        type: string;
-        version: string;
-      };
-      releases: Array<{ [key: string]: unknown }>;
-    };
+  options: Options,
+  config?: Config,
+) => Promise<Result>;
 
 interface TestRepoOptions {
   files?: Record<string, string>;
@@ -63,7 +48,6 @@ interface TestRepoOptions {
 
 /**
  * Lazy-loaded semantic-release function
- * Using dynamic import to handle ES module in CommonJS context
  */
 let semanticReleaseFunction: SemanticReleaseFunction | undefined;
 
@@ -186,17 +170,11 @@ function filterProblematicPluginsForTest(
 }
 
 async function getSemanticRelease(): Promise<SemanticReleaseFunction> {
-  if (!semanticReleaseFunction) {
-    // Dynamic import for ES module compatibility
-    // We can't directly call await import because jest throws an error
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-implied-eval
-    const dynamicImport = new Function(
-      "specifier",
-      "return import(specifier)",
-    ) as (specifier: string) => Promise<{ default: SemanticReleaseFunction }>;
-
-    const semanticReleaseModule = await dynamicImport("semantic-release");
-    semanticReleaseFunction = semanticReleaseModule.default;
+  if (semanticReleaseFunction === undefined) {
+    const semanticReleaseModule = await import("semantic-release");
+    const release: SemanticReleaseFunction = (options, config) =>
+      semanticReleaseModule.default(options, config);
+    semanticReleaseFunction = release;
   }
   return semanticReleaseFunction;
 }
@@ -210,8 +188,8 @@ function loadConfig(preset: string, cwd?: string): SemanticReleaseConfig {
     ? path.join(PROJECT_ROOT, "lib", `${preset}.js`)
     : path.join(PROJECT_ROOT, "lib", "index.js");
 
-  // eslint-disable-next-line unicorn/prefer-module, @typescript-eslint/no-dynamic-delete
-  delete require.cache[require.resolve(configPath)];
+  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+  delete esmRequire.cache[esmRequire.resolve(configPath)];
 
   // Change to the specified directory if provided
   const originalCwd = process.cwd();
@@ -220,8 +198,8 @@ function loadConfig(preset: string, cwd?: string): SemanticReleaseConfig {
   }
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/consistent-type-assertions, unicorn/prefer-module
-    return require(configPath).config as SemanticReleaseConfig;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/consistent-type-assertions
+    return esmRequire(configPath).config as SemanticReleaseConfig;
   } finally {
     if (cwd) {
       process.chdir(originalCwd);
@@ -240,7 +218,7 @@ async function runSemanticRelease(
   config: SemanticReleaseConfig,
 ): Promise<{
   output: CapturedOutput;
-  result: SemanticReleaseResult;
+  result: Result;
 }> {
   const stdout = createCaptureStream();
   const stderr = createCaptureStream();
@@ -288,9 +266,6 @@ async function runSemanticRelease(
 }
 
 describe("Integration Tests - Semantic Release Execution", () => {
-  // Increase timeout for integration tests as they involve Git operations and semantic-release execution
-  jest.setTimeout(30_000);
-
   test.each(["", "gradle", "gradle-and-npm", "npm", "openapi"])(
     "runs successfully with core semantic-release functionality with preset %s",
     async (preset) => {
@@ -334,5 +309,6 @@ paths: {}`,
       expect(result.nextRelease.notes).toBeDefined();
       expect(result.nextRelease.notes?.length).toBeGreaterThan(0);
     },
+    30_000,
   );
 });

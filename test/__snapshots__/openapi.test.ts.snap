@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 1`] = `"gradle-semantic-release-plugin"`;
+exports[`openapi > adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 1`] = `"gradle-semantic-release-plugin"`;
 
-exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 2`] = `
+exports[`openapi > adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 2`] = `
 [
   "@semantic-release/npm",
   {
@@ -11,7 +11,7 @@ exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, sema
 ]
 `;
 
-exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 3`] = `
+exports[`openapi > adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 3`] = `
 [
   "@aensley/semantic-release-openapi",
   {
@@ -22,7 +22,7 @@ exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, sema
 ]
 `;
 
-exports[`openapi adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 4`] = `
+exports[`openapi > adds gradle-semantic-release-plugin, semantic-release/npm, semantic-release/git, and semantic-release-openapi plugins 4`] = `
 [
   "@semantic-release/git",
   {

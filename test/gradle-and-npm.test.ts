@@ -1,12 +1,13 @@
 import { execSync } from "node:child_process";
+import { describe, expect, test, vi } from "vitest";
 
-jest.mock("node:child_process", () => ({
-  execSync: jest.fn(),
+vi.mock("node:child_process", () => ({
+  execSync: vi.fn(),
 }));
 
 describe("gradle-and-npm", () => {
   test("adds gradle-semantic-release-plugin, semantic-release/npm, and semantic-release/git plugins", async () => {
-    jest.mocked(execSync).mockImplementation(() => "");
+    vi.mocked(execSync).mockImplementation(() => "");
     const { config: gradleAndNpm } = await import("~/gradle-and-npm");
     const gradlePlugin = gradleAndNpm.plugins[3];
     const npmPlugin = gradleAndNpm.plugins[4];
