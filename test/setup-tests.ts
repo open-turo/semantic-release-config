@@ -1,18 +1,20 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { afterEach, beforeEach, vi } from "vitest";
 
-const originalEnvironment = process.env;
+let originalGithubReference: string | undefined;
 
 beforeEach(() => {
   vi.resetModules();
-  process.env = {
-    ...originalEnvironment,
-    GITHUB_REF: "refs/head/main",
-  };
+  originalGithubReference = process.env.GITHUB_REF;
+  process.env.GITHUB_REF = "refs/head/main";
 });
 
 afterEach(() => {
-  process.env = originalEnvironment;
+  if (originalGithubReference === undefined) {
+    delete process.env.GITHUB_REF;
+  } else {
+    process.env.GITHUB_REF = originalGithubReference;
+  }
   vi.resetModules();
   vi.restoreAllMocks();
 });
