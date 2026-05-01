@@ -4,7 +4,7 @@ import type { SemanticReleasePlugin } from "~/_config";
 
 describe("npm", () => {
   test("adds npm and semantic-release/git plugins", async () => {
-    const { config: npm } = await import("~/npm");
+    const { default: npm } = await import("~/npm");
     expect(npm.plugins).toHaveLength(6);
     const npmPlugin = npm.plugins[3];
     const semanticReleasePlugin = npm.plugins[4];
@@ -25,7 +25,7 @@ describe("npm", () => {
         };
       });
       process.env.GITHUB_REF = branch;
-      const { config: npm } = await import("~/npm");
+      const { default: npm } = await import("~/npm");
       expect(npm.plugins).toHaveLength(5);
       delete process.env.GITHUB_REF;
     },
