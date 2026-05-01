@@ -37,9 +37,11 @@ If you are not using the default preset, you have to specify its name too:
 
 ```json
 {
-  "extends": "@open-turo/semantic-release-config/lib/npm"
+  "extends": "@open-turo/semantic-release-config/npm"
 }
 ```
+
+Available presets: `npm`, `gradle`, `gradle-and-npm`, `openapi`.
 
 See more details about how shareable configurations can be created in [here](https://semantic-release.gitbook.io/semantic-release/usage/shareable-configurations).
 
