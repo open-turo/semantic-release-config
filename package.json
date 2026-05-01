@@ -63,7 +63,7 @@
   },
   "scripts": {
     "build": "tspc -p ./tsconfig.build.json",
-    "clean": "rimraf lib",
+    "clean": "rimraf lib tsconfig.build.tsbuildinfo",
     "lint": "eslint",
     "pretest": "npm run build",
     "test": "vitest run",

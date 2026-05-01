@@ -1,4 +1,4 @@
-import { createPreset, semanticReleaseGit } from "~/_config";
+import { createPreset, semanticReleaseGit } from "~/_config.js";
 
 /**
  * Semantic release configuration preset for Gradle projects. It adds the gradle-semantic-release-plugin and

@@ -1,4 +1,4 @@
-import { createPreset, semanticReleaseGit } from "~/_config";
+import { createPreset, semanticReleaseGit } from "~/_config.js";
 
 /**
  * Semantic release configuration for NPM projects. It extends the default configuration by publishing to NPM
