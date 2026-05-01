@@ -42,7 +42,17 @@
     "./npm": "./lib/npm.js",
     "./gradle": "./lib/gradle.js",
     "./gradle-and-npm": "./lib/gradle-and-npm.js",
-    "./openapi": "./lib/openapi.js"
+    "./openapi": "./lib/openapi.js",
+    "./lib/index": "./lib/index.js",
+    "./lib/index.js": "./lib/index.js",
+    "./lib/npm": "./lib/npm.js",
+    "./lib/npm.js": "./lib/npm.js",
+    "./lib/gradle": "./lib/gradle.js",
+    "./lib/gradle.js": "./lib/gradle.js",
+    "./lib/gradle-and-npm": "./lib/gradle-and-npm.js",
+    "./lib/gradle-and-npm.js": "./lib/gradle-and-npm.js",
+    "./lib/openapi": "./lib/openapi.js",
+    "./lib/openapi.js": "./lib/openapi.js"
   },
   "name": "@open-turo/semantic-release-config",
   "peerDependencies": {
