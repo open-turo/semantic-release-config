@@ -7,7 +7,7 @@ import {
   createPluginIfFilesExist,
   createPreset,
   semanticReleaseGit,
-} from "~/_config";
+} from "~/_config.js";
 
 /**
  * Semantic release configuration preset for projects that release with Gradle and NPM.
