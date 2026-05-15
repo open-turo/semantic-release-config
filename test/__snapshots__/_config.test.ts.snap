@@ -75,6 +75,7 @@ exports[`config > createPreset > creates a preset including the default config 1
         },
       },
     ],
+    "@open-turo/semantic-release-jira",
     [
       "@semantic-release/github",
       {

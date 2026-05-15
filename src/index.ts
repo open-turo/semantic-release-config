@@ -37,6 +37,7 @@ const config = {
         },
       },
     ],
+    "@open-turo/semantic-release-jira",
     [
       "@semantic-release/github",
       {
