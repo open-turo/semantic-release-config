@@ -5,8 +5,7 @@ import * as process from "node:process";
 import baseConfig from "~/index.js";
 
 export type SemanticReleasePlugin =
-  | readonly [string, Record<string, unknown>]
-  | string;
+  readonly [string, Record<string, unknown>] | string;
 
 // We have a set of plugins that ideally should run after every other plugin to guarantee that things like publishing to NPM
 // already happen before these plugins run
@@ -97,7 +96,6 @@ export function createPreset(
  */
 function doesGitRepoContainFile(filePath: string, repoPath = process.cwd()) {
   try {
-    // eslint-disable-next-line sonarjs/os-command
     execSync(`git cat-file -e HEAD:${filePath}`, {
       cwd: repoPath,
       stdio: "ignore",
