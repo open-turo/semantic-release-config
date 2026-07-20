@@ -137,7 +137,6 @@ function createTestRepo(options: TestRepoOptions = {}): string {
  * Execute git command safely in test environment
  */
 function execGitCommand(command: string, cwd: string): void {
-  // eslint-disable-next-line sonarjs/os-command -- Safe git commands in test environment with controlled inputs
   execSync(command, {
     cwd,
     env: { ...process.env, PATH: process.env.PATH },
