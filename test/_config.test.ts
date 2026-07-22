@@ -1,5 +1,3 @@
-import type { VerifyConditionsContext } from "semantic-release";
-
 import { template } from "lodash";
 import { execSync } from "node:child_process";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
@@ -56,35 +54,24 @@ describe("config", () => {
   describe("restoreGithubReferenceForNpmProvenance", () => {
     afterEach(() => {
       delete process.env.GITHUB_REF_VALUE;
+      delete process.env.GITHUB_REF;
     });
 
-    test("restores GITHUB_REF from GITHUB_REF_VALUE so npm provenance matches the OIDC-attested ref", () => {
+    test("restores process.env.GITHUB_REF from GITHUB_REF_VALUE so npm provenance matches the OIDC-attested ref", () => {
+      process.env.GITHUB_REF = "refs/heads/feat/some-branch";
       process.env.GITHUB_REF_VALUE = "refs/pull/273/merge";
-      const context: Partial<VerifyConditionsContext> = {
-        env: { GITHUB_REF: "refs/heads/feat/some-branch" },
-      };
 
-      config.restoreGithubReferenceForNpmProvenance.verifyConditions(
-        {},
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        context as VerifyConditionsContext,
-      );
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
 
-      expect(context.env?.GITHUB_REF).toBe("refs/pull/273/merge");
+      expect(process.env.GITHUB_REF).toBe("refs/pull/273/merge");
     });
 
-    test("leaves GITHUB_REF untouched when GITHUB_REF_VALUE is not set", () => {
-      const context: Partial<VerifyConditionsContext> = {
-        env: { GITHUB_REF: "refs/heads/main" },
-      };
+    test("leaves process.env.GITHUB_REF untouched when GITHUB_REF_VALUE is not set", () => {
+      process.env.GITHUB_REF = "refs/heads/main";
 
-      config.restoreGithubReferenceForNpmProvenance.verifyConditions(
-        {},
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        context as VerifyConditionsContext,
-      );
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
 
-      expect(context.env?.GITHUB_REF).toBe("refs/heads/main");
+      expect(process.env.GITHUB_REF).toBe("refs/heads/main");
     });
   });
 
