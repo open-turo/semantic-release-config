@@ -1,3 +1,5 @@
+import type { VerifyConditionsContext } from "semantic-release";
+
 import micromatch from "micromatch";
 import { execSync } from "node:child_process";
 import * as process from "node:process";
@@ -5,12 +7,37 @@ import * as process from "node:process";
 import baseConfig from "~/index.js";
 
 export type SemanticReleasePlugin =
+  | InlineSemanticReleasePlugin
   | readonly [string, Record<string, unknown>]
   | string;
+
+interface InlineSemanticReleasePlugin {
+  verifyConditions: (
+    pluginConfig: Record<string, unknown>,
+    context: VerifyConditionsContext,
+  ) => void;
+}
 
 // We have a set of plugins that ideally should run after every other plugin to guarantee that things like publishing to NPM
 // already happen before these plugins run
 const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
+
+/**
+ * `open-turo/actions-release/semantic-release` overrides GITHUB_REF to the PR's head branch name (instead of
+ * the pull_request merge ref) so semantic-release can match the branch against configured release branches.
+ * npm trusted publishing (OIDC provenance) also reads GITHUB_REF, but expects it to match what GitHub's OIDC
+ * token attests to - the merge ref for pull_request-triggered runs - so the override makes `npm publish`
+ * fail provenance verification for PR-triggered prereleases. The action exposes the un-overridden ref via
+ * GITHUB_REF_VALUE; restore it before any plugin (e.g. @semantic-release/npm) publishes.
+ */
+export const restoreGithubReferenceForNpmProvenance: InlineSemanticReleasePlugin =
+  {
+    verifyConditions(_pluginConfig, context) {
+      if (process.env.GITHUB_REF_VALUE) {
+        context.env.GITHUB_REF = process.env.GITHUB_REF_VALUE;
+      }
+    },
+  };
 
 /**
  * Return the configuration for the @semantic-release/git plugin to commit
@@ -45,11 +72,16 @@ export function semanticReleaseGit(
  * @param plugin Plugin config
  * @returns Plugin name
  */
-const getPluginName = (plugin: SemanticReleasePlugin) => {
+const isPluginTuple = (
+  plugin: SemanticReleasePlugin,
+): plugin is readonly [string, Record<string, unknown>] =>
+  Array.isArray(plugin);
+
+const getPluginName = (plugin: SemanticReleasePlugin): string | undefined => {
   if (typeof plugin === "string") {
     return plugin;
   }
-  return plugin[0];
+  return isPluginTuple(plugin) ? plugin[0] : undefined;
 };
 
 /**
@@ -77,15 +109,18 @@ export function createPreset(
   return {
     ...baseConfig,
     plugins: [
-      ...baseConfig.plugins.filter(
-        (p) => !pluginsThatGoAtTheEnd.has(getPluginName(p)),
-      ),
+      restoreGithubReferenceForNpmProvenance,
+      ...baseConfig.plugins.filter((p) => {
+        const name = getPluginName(p);
+        return name === undefined || !pluginsThatGoAtTheEnd.has(name);
+      }),
       ...plugins.filter(
         (plugin): plugin is SemanticReleasePlugin => plugin !== undefined,
       ),
-      ...baseConfig.plugins.filter((p) =>
-        pluginsThatGoAtTheEnd.has(getPluginName(p)),
-      ),
+      ...baseConfig.plugins.filter((p) => {
+        const name = getPluginName(p);
+        return name !== undefined && pluginsThatGoAtTheEnd.has(name);
+      }),
     ],
   };
 }
