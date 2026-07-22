@@ -69,7 +69,10 @@ of the plugins to work correctly.
 - `GITHUB_TOKEN`. When a new release is published, this plugin will try to commit and push into the released branch.
   Ensure that the user that is running the release has push rights and can bypass branch
   protection rules (see [here](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/managing-a-branch-protection-rule))
-- `NPM_TOKEN`. A NPM token so the package can be published to NPM (a `.npmrc` file with extra configuration can also be used)
+- `NPM_TOKEN`. A NPM token so the package can be published to NPM. Not needed if the workflow instead uses
+  [npm trusted publishing](https://docs.npmjs.com/trusted-publishers) (OIDC) — grant the job `id-token: write`
+  permission and configure a trusted publisher for the package on npmjs.com. The package's `package.json` must
+  also have a `repository` field matching the GitHub repo, or npm will reject the publish's provenance attestation.
 
 #### OpenAPI
 
