@@ -1,5 +1,3 @@
-import type { VerifyConditionsContext } from "semantic-release";
-
 import micromatch from "micromatch";
 import { execSync } from "node:child_process";
 import * as process from "node:process";
@@ -12,10 +10,7 @@ export type SemanticReleasePlugin =
   | string;
 
 interface InlineSemanticReleasePlugin {
-  verifyConditions: (
-    pluginConfig: Record<string, unknown>,
-    context: VerifyConditionsContext,
-  ) => void;
+  verifyConditions: () => void;
 }
 
 // We have a set of plugins that ideally should run after every other plugin to guarantee that things like publishing to NPM
@@ -29,12 +24,18 @@ const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
  * token attests to - the merge ref for pull_request-triggered runs - so the override makes `npm publish`
  * fail provenance verification for PR-triggered prereleases. The action exposes the un-overridden ref via
  * GITHUB_REF_VALUE; restore it before any plugin (e.g. @semantic-release/npm) publishes.
+ *
+ * This mutates `process.env` directly rather than the `context.env` passed into the hook: semantic-release
+ * deep-clones `context` for every plugin step (see `normalize.js`'s `validator`), so mutating `context.env`
+ * only ever affects a throwaway copy and is invisible to every later step, including `@semantic-release/npm`'s
+ * publish. `process.env` is the one thing that isn't cloned, and `context.env` starts out as that same
+ * object, so writing here is what actually persists into later steps' clones.
  */
 export const restoreGithubReferenceForNpmProvenance: InlineSemanticReleasePlugin =
   {
-    verifyConditions(_pluginConfig, context) {
+    verifyConditions() {
       if (process.env.GITHUB_REF_VALUE) {
-        context.env.GITHUB_REF = process.env.GITHUB_REF_VALUE;
+        process.env.GITHUB_REF = process.env.GITHUB_REF_VALUE;
       }
     },
   };
