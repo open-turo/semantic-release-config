@@ -1,6 +1,8 @@
+import type { VerifyConditionsContext } from "semantic-release";
+
 import { template } from "lodash";
 import { execSync } from "node:child_process";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import {
   createPluginIfFilesExist,
@@ -44,8 +46,45 @@ describe("config", () => {
 
     test("@semantic-release/exec is the last plugin", async () => {
       const { default: npm } = await import("~/npm");
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      expect(npm.plugins.at(-1)![0]).toBe("@semantic-release/exec");
+      const lastPlugin = npm.plugins.at(-1);
+      expect(Array.isArray(lastPlugin) && lastPlugin[0]).toBe(
+        "@semantic-release/exec",
+      );
+    });
+  });
+
+  describe("restoreGithubReferenceForNpmProvenance", () => {
+    afterEach(() => {
+      delete process.env.GITHUB_REF_VALUE;
+    });
+
+    test("restores GITHUB_REF from GITHUB_REF_VALUE so npm provenance matches the OIDC-attested ref", () => {
+      process.env.GITHUB_REF_VALUE = "refs/pull/273/merge";
+      const context: Partial<VerifyConditionsContext> = {
+        env: { GITHUB_REF: "refs/heads/feat/some-branch" },
+      };
+
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions(
+        {},
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        context as VerifyConditionsContext,
+      );
+
+      expect(context.env?.GITHUB_REF).toBe("refs/pull/273/merge");
+    });
+
+    test("leaves GITHUB_REF untouched when GITHUB_REF_VALUE is not set", () => {
+      const context: Partial<VerifyConditionsContext> = {
+        env: { GITHUB_REF: "refs/heads/main" },
+      };
+
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions(
+        {},
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        context as VerifyConditionsContext,
+      );
+
+      expect(context.env?.GITHUB_REF).toBe("refs/heads/main");
     });
   });
 
@@ -56,7 +95,9 @@ describe("config", () => {
         const assets = ["a"];
         const gitPlugin = config.semanticReleaseGit(assets);
         const pluginConfig =
-          gitPlugin && isGitPluginConfig(gitPlugin[1])
+          gitPlugin &&
+          Array.isArray(gitPlugin) &&
+          isGitPluginConfig(gitPlugin[1])
             ? gitPlugin[1]
             : {
                 assets: [],
