@@ -62,6 +62,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/open-turo/semantic-release-config.git"
+  },
   "scripts": {
     "build": "tspc -p ./tsconfig.build.json",
     "clean": "rimraf lib tsconfig.build.tsbuildinfo",
