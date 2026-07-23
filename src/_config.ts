@@ -11,12 +11,17 @@ export type SemanticReleasePlugin =
   | string;
 
 interface InlineSemanticReleasePlugin {
-  verifyConditions: () => void;
+  publish?: () => Promise<void>;
+  verifyConditions?: () => void;
+}
+
+interface PullRequestApiResponse {
+  merge_commit_sha?: string;
 }
 
 interface PullRequestEventPayload {
   pull_request?: {
-    merge_commit_sha?: string;
+    number?: number;
   };
 }
 
@@ -32,10 +37,17 @@ const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
  * the SHA of the ephemeral merge commit it currently points to - not the PR's head branch/commit. The
  * override therefore makes `npm publish` fail provenance verification for PR-triggered prereleases.
  *
- * The action exposes the un-overridden ref via GITHUB_REF_VALUE, but not the merge commit SHA, so that part
- * is recovered from the `pull_request` webhook payload at GITHUB_EVENT_PATH (`pull_request.merge_commit_sha`
- * is GitHub's own record of what `refs/pull/<n>/merge` currently resolves to). Both are restored before any
- * plugin (e.g. @semantic-release/npm) publishes.
+ * The action exposes the un-overridden ref via GITHUB_REF_VALUE, so GITHUB_REF is restored eagerly in
+ * verifyConditions - it's just a branch name, there's nothing to go stale.
+ *
+ * GITHUB_SHA is trickier: the action doesn't expose the original value, and GitHub recomputes
+ * `refs/pull/<n>/merge` asynchronously, so any snapshot of it (e.g. the `pull_request.merge_commit_sha`
+ * webhook payload at GITHUB_EVENT_PATH) can go stale between when it's read and when npm actually publishes,
+ * especially right after a force-push. There's no way to eliminate that race entirely from here, only shrink
+ * it: fetch the PR's *current* merge_commit_sha from the GitHub API as a `publish` hook - guaranteed (by
+ * this plugin being first in the array) to run right before @semantic-release/npm's own publish, i.e. as
+ * late as possible, after every other plugin's verifyConditions/analyzeCommits/verifyRelease/generateNotes/
+ * prepare has already run.
  *
  * This mutates `process.env` directly rather than the `context.env` passed into the hook: semantic-release
  * deep-clones `context` for every plugin step (see `normalize.js`'s `validator`), so mutating `context.env`
@@ -45,22 +57,52 @@ const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
  */
 export const restoreGithubReferenceForNpmProvenance: InlineSemanticReleasePlugin =
   {
+    async publish() {
+      if (
+        process.env.GITHUB_EVENT_NAME !== "pull_request" ||
+        !process.env.GITHUB_EVENT_PATH ||
+        !process.env.GITHUB_REPOSITORY ||
+        !process.env.GITHUB_TOKEN
+      ) {
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      const event = JSON.parse(
+        readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"),
+      ) as PullRequestEventPayload;
+      const prNumber = event.pull_request?.number;
+      if (!prNumber) {
+        return;
+      }
+
+      try {
+        // This plugin only ever runs inside open-turo/actions-release/semantic-release, which pins
+        // Node to 24.16.0 regardless of what a consuming package declares as its own engines.node
+        // floor, so `fetch` is always available here even though it predates this package's floor.
+        // eslint-disable-next-line n/no-unsupported-features/node-builtins
+        const response = await fetch(
+          `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/pulls/${String(prNumber)}`,
+          {
+            headers: {
+              accept: "application/vnd.github+json",
+              authorization: `Bearer ${process.env.GITHUB_TOKEN}`,
+            },
+          },
+        );
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const pr = (await response.json()) as PullRequestApiResponse;
+        if (pr.merge_commit_sha) {
+          process.env.GITHUB_SHA = pr.merge_commit_sha;
+        }
+      } catch {
+        // Best effort: if the GitHub API is unreachable, leave GITHUB_SHA as-is rather than
+        // failing the whole release over a provenance nicety.
+      }
+    },
     verifyConditions() {
       if (process.env.GITHUB_REF_VALUE) {
         process.env.GITHUB_REF = process.env.GITHUB_REF_VALUE;
-      }
-
-      if (
-        process.env.GITHUB_EVENT_NAME === "pull_request" &&
-        process.env.GITHUB_EVENT_PATH
-      ) {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        const event = JSON.parse(
-          readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"),
-        ) as PullRequestEventPayload;
-        if (event.pull_request?.merge_commit_sha) {
-          process.env.GITHUB_SHA = event.pull_request.merge_commit_sha;
-        }
       }
     },
   };

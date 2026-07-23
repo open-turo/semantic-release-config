@@ -9,6 +9,7 @@ exports[`config > createPreset > creates a preset including the default config 1
   ],
   "plugins": [
     {
+      "publish": [Function],
       "verifyConditions": [Function],
     },
     "@semantic-release/commit-analyzer",
