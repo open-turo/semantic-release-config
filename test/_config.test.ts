@@ -1,7 +1,7 @@
 import { template } from "lodash";
 import { execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import {
   createPluginIfFilesExist,
@@ -57,7 +57,10 @@ describe("config", () => {
   });
 
   describe("restoreGithubReferenceForNpmProvenance", () => {
-    afterEach(() => {
+    // These tests run inside real CI, which sets GITHUB_EVENT_NAME/GITHUB_EVENT_PATH/etc. on the
+    // ambient process.env for its own pull_request-triggered run. Clear them before every test (not
+    // just after) so that ambient state never leaks into a test that doesn't set them itself.
+    beforeEach(() => {
       delete process.env.GITHUB_REF_VALUE;
       delete process.env.GITHUB_REF;
       delete process.env.GITHUB_EVENT_NAME;
