@@ -65,15 +65,18 @@ describe("config", () => {
       delete process.env.GITHUB_REF;
       delete process.env.GITHUB_EVENT_NAME;
       delete process.env.GITHUB_EVENT_PATH;
+      delete process.env.GITHUB_REPOSITORY;
+      delete process.env.GITHUB_TOKEN;
       delete process.env.GITHUB_SHA;
       vi.mocked(readFileSync).mockReset();
+      vi.stubGlobal("fetch", vi.fn());
     });
 
     test("restores process.env.GITHUB_REF from GITHUB_REF_VALUE so npm provenance matches the OIDC-attested ref", () => {
       process.env.GITHUB_REF = "refs/heads/feat/some-branch";
       process.env.GITHUB_REF_VALUE = "refs/pull/273/merge";
 
-      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions?.();
 
       expect(process.env.GITHUB_REF).toBe("refs/pull/273/merge");
     });
@@ -81,41 +84,79 @@ describe("config", () => {
     test("leaves process.env.GITHUB_REF untouched when GITHUB_REF_VALUE is not set", () => {
       process.env.GITHUB_REF = "refs/heads/main";
 
-      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions?.();
 
       expect(process.env.GITHUB_REF).toBe("refs/heads/main");
     });
 
-    test("restores process.env.GITHUB_SHA from the pull_request event's merge_commit_sha so npm provenance matches the OIDC-attested digest", () => {
+    test("restores process.env.GITHUB_SHA from the PR's live merge_commit_sha so npm provenance matches the OIDC-attested digest", async () => {
       process.env.GITHUB_EVENT_NAME = "pull_request";
       // eslint-disable-next-line sonarjs/publicly-writable-directories -- readFileSync is mocked, no real I/O
       process.env.GITHUB_EVENT_PATH = "/tmp/event.json";
+      process.env.GITHUB_REPOSITORY = "open-turo/semantic-release-config";
+      process.env.GITHUB_TOKEN = "test-token";
       process.env.GITHUB_SHA = "450b7abf1022e1998c74ee414b594b612ffcc2eb";
       vi.mocked(readFileSync).mockReturnValue(
-        JSON.stringify({
-          pull_request: {
-            merge_commit_sha: "d2546efb194b521adc56eb0a544a0b58d019e00d",
-          },
+        JSON.stringify({ pull_request: { number: 273 } }),
+      );
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins, @typescript-eslint/consistent-type-assertions -- fetch is always available here (see src/_config.ts); Response is large, only json() matters for this mock
+      vi.mocked(fetch).mockResolvedValue({
+        json: () =>
+          Promise.resolve({
+            merge_commit_sha: "8eba7d0bfce68135b79e23a20cd68759d66ecfdf",
+          }),
+        // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      } as Response);
+
+      await config.restoreGithubReferenceForNpmProvenance.publish?.();
+
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      expect(fetch).toHaveBeenCalledWith(
+        "https://api.github.com/repos/open-turo/semantic-release-config/pulls/273",
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- vitest's expect.objectContaining() typing is any
+          headers: expect.objectContaining({
+            authorization: "Bearer test-token",
+          }),
         }),
       );
-
-      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
-
       expect(process.env.GITHUB_SHA).toBe(
-        "d2546efb194b521adc56eb0a544a0b58d019e00d",
+        "8eba7d0bfce68135b79e23a20cd68759d66ecfdf",
       );
     });
 
-    test("leaves process.env.GITHUB_SHA untouched when the event is not a pull_request", () => {
+    test("leaves process.env.GITHUB_SHA untouched when the event is not a pull_request", async () => {
       process.env.GITHUB_EVENT_NAME = "push";
       process.env.GITHUB_SHA = "450b7abf1022e1998c74ee414b594b612ffcc2eb";
 
-      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
+      await config.restoreGithubReferenceForNpmProvenance.publish?.();
 
       expect(process.env.GITHUB_SHA).toBe(
         "450b7abf1022e1998c74ee414b594b612ffcc2eb",
       );
       expect(readFileSync).not.toHaveBeenCalled();
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      expect(fetch).not.toHaveBeenCalled();
+    });
+
+    test("leaves process.env.GITHUB_SHA untouched when the GitHub API call fails", async () => {
+      process.env.GITHUB_EVENT_NAME = "pull_request";
+      // eslint-disable-next-line sonarjs/publicly-writable-directories -- readFileSync is mocked, no real I/O
+      process.env.GITHUB_EVENT_PATH = "/tmp/event.json";
+      process.env.GITHUB_REPOSITORY = "open-turo/semantic-release-config";
+      process.env.GITHUB_TOKEN = "test-token";
+      process.env.GITHUB_SHA = "450b7abf1022e1998c74ee414b594b612ffcc2eb";
+      vi.mocked(readFileSync).mockReturnValue(
+        JSON.stringify({ pull_request: { number: 273 } }),
+      );
+      // eslint-disable-next-line n/no-unsupported-features/node-builtins
+      vi.mocked(fetch).mockRejectedValue(new Error("network error"));
+
+      await config.restoreGithubReferenceForNpmProvenance.publish?.();
+
+      expect(process.env.GITHUB_SHA).toBe(
+        "450b7abf1022e1998c74ee414b594b612ffcc2eb",
+      );
     });
   });
 
