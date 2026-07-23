@@ -1,5 +1,6 @@
 import micromatch from "micromatch";
 import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import * as process from "node:process";
 
 import baseConfig from "~/index.js";
@@ -13,17 +14,28 @@ interface InlineSemanticReleasePlugin {
   verifyConditions: () => void;
 }
 
+interface PullRequestEventPayload {
+  pull_request?: {
+    merge_commit_sha?: string;
+  };
+}
+
 // We have a set of plugins that ideally should run after every other plugin to guarantee that things like publishing to NPM
 // already happen before these plugins run
 const pluginsThatGoAtTheEnd = new Set(["@semantic-release/exec"]);
 
 /**
- * `open-turo/actions-release/semantic-release` overrides GITHUB_REF to the PR's head branch name (instead of
- * the pull_request merge ref) so semantic-release can match the branch against configured release branches.
- * npm trusted publishing (OIDC provenance) also reads GITHUB_REF, but expects it to match what GitHub's OIDC
- * token attests to - the merge ref for pull_request-triggered runs - so the override makes `npm publish`
- * fail provenance verification for PR-triggered prereleases. The action exposes the un-overridden ref via
- * GITHUB_REF_VALUE; restore it before any plugin (e.g. @semantic-release/npm) publishes.
+ * `open-turo/actions-release/semantic-release` overrides GITHUB_REF (to the PR's head branch name) and
+ * GITHUB_SHA (to the PR's head commit) so semantic-release can match the branch against configured release
+ * branches. npm trusted publishing (OIDC provenance) also reads both, but expects them to match what
+ * GitHub's OIDC token attests to for pull_request-triggered runs: the merge ref (`refs/pull/<n>/merge`) and
+ * the SHA of the ephemeral merge commit it currently points to - not the PR's head branch/commit. The
+ * override therefore makes `npm publish` fail provenance verification for PR-triggered prereleases.
+ *
+ * The action exposes the un-overridden ref via GITHUB_REF_VALUE, but not the merge commit SHA, so that part
+ * is recovered from the `pull_request` webhook payload at GITHUB_EVENT_PATH (`pull_request.merge_commit_sha`
+ * is GitHub's own record of what `refs/pull/<n>/merge` currently resolves to). Both are restored before any
+ * plugin (e.g. @semantic-release/npm) publishes.
  *
  * This mutates `process.env` directly rather than the `context.env` passed into the hook: semantic-release
  * deep-clones `context` for every plugin step (see `normalize.js`'s `validator`), so mutating `context.env`
@@ -36,6 +48,19 @@ export const restoreGithubReferenceForNpmProvenance: InlineSemanticReleasePlugin
     verifyConditions() {
       if (process.env.GITHUB_REF_VALUE) {
         process.env.GITHUB_REF = process.env.GITHUB_REF_VALUE;
+      }
+
+      if (
+        process.env.GITHUB_EVENT_NAME === "pull_request" &&
+        process.env.GITHUB_EVENT_PATH
+      ) {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const event = JSON.parse(
+          readFileSync(process.env.GITHUB_EVENT_PATH, "utf8"),
+        ) as PullRequestEventPayload;
+        if (event.pull_request?.merge_commit_sha) {
+          process.env.GITHUB_SHA = event.pull_request.merge_commit_sha;
+        }
       }
     },
   };

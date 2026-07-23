@@ -1,5 +1,6 @@
 import { template } from "lodash";
 import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import {
@@ -23,6 +24,10 @@ function isGitPluginConfig(object: unknown): object is GitPluginConfig {
 
 vi.mock("node:child_process", () => ({
   execSync: vi.fn(),
+}));
+
+vi.mock("node:fs", () => ({
+  readFileSync: vi.fn(),
 }));
 
 describe("config", () => {
@@ -55,6 +60,10 @@ describe("config", () => {
     afterEach(() => {
       delete process.env.GITHUB_REF_VALUE;
       delete process.env.GITHUB_REF;
+      delete process.env.GITHUB_EVENT_NAME;
+      delete process.env.GITHUB_EVENT_PATH;
+      delete process.env.GITHUB_SHA;
+      vi.mocked(readFileSync).mockReset();
     });
 
     test("restores process.env.GITHUB_REF from GITHUB_REF_VALUE so npm provenance matches the OIDC-attested ref", () => {
@@ -72,6 +81,38 @@ describe("config", () => {
       config.restoreGithubReferenceForNpmProvenance.verifyConditions();
 
       expect(process.env.GITHUB_REF).toBe("refs/heads/main");
+    });
+
+    test("restores process.env.GITHUB_SHA from the pull_request event's merge_commit_sha so npm provenance matches the OIDC-attested digest", () => {
+      process.env.GITHUB_EVENT_NAME = "pull_request";
+      // eslint-disable-next-line sonarjs/publicly-writable-directories -- readFileSync is mocked, no real I/O
+      process.env.GITHUB_EVENT_PATH = "/tmp/event.json";
+      process.env.GITHUB_SHA = "450b7abf1022e1998c74ee414b594b612ffcc2eb";
+      vi.mocked(readFileSync).mockReturnValue(
+        JSON.stringify({
+          pull_request: {
+            merge_commit_sha: "d2546efb194b521adc56eb0a544a0b58d019e00d",
+          },
+        }),
+      );
+
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
+
+      expect(process.env.GITHUB_SHA).toBe(
+        "d2546efb194b521adc56eb0a544a0b58d019e00d",
+      );
+    });
+
+    test("leaves process.env.GITHUB_SHA untouched when the event is not a pull_request", () => {
+      process.env.GITHUB_EVENT_NAME = "push";
+      process.env.GITHUB_SHA = "450b7abf1022e1998c74ee414b594b612ffcc2eb";
+
+      config.restoreGithubReferenceForNpmProvenance.verifyConditions();
+
+      expect(process.env.GITHUB_SHA).toBe(
+        "450b7abf1022e1998c74ee414b594b612ffcc2eb",
+      );
+      expect(readFileSync).not.toHaveBeenCalled();
     });
   });
 
