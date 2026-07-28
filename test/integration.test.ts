@@ -309,7 +309,8 @@ paths: {}`,
       expect(result.commits).toHaveLength(1);
       expect(result.commits.at(0)?.message).toContain(message);
       expect(result.nextRelease.notes).toBeDefined();
-      expect(result.nextRelease.notes?.length).toBeGreaterThan(0);
+      expect(result.nextRelease.notes).toContain("### Bug Fixes");
+      expect(result.nextRelease.notes).toContain("add open api spec");
     },
     30_000,
   );
