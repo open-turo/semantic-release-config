@@ -314,4 +314,28 @@ paths: {}`,
     },
     30_000,
   );
+
+  // Regression test for https://github.com/semantic-release/release-notes-generator/issues/992:
+  // conventional-changelog-conventionalcommits@10 renders release-notes-generator's changelog
+  // template as only the version header, silently dropping every commit section.
+  test("generates commit sections grouped by type for a mixed feat/fix release", async () => {
+    const repoDirectory = createTestRepo();
+    addCommit(repoDirectory, "feat: add widget export");
+    addCommit(repoDirectory, "fix: correct widget export encoding");
+
+    const config = await loadConfig("");
+    const { result } = await runSemanticRelease(repoDirectory, config);
+
+    expect(result).toBeTruthy();
+    if (!result) {
+      throw new Error("Expected result to be truthy");
+    }
+
+    expect(result.nextRelease.notes).toContain("### Features");
+    expect(result.nextRelease.notes).toContain("add widget export");
+    expect(result.nextRelease.notes).toContain("### Bug Fixes");
+    expect(result.nextRelease.notes).toContain(
+      "correct widget export encoding",
+    );
+  }, 30_000);
 });
