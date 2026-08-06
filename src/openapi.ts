@@ -11,7 +11,7 @@ const semanticReleaseOpenApi = (
   apiSpecFiles: string[],
 ): SemanticReleasePlugin => {
   return [
-    "@aensley/semantic-release-openapi",
+    "semantic-release-openapi",
     {
       apiSpecFiles,
     },
