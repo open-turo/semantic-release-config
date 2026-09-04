@@ -81,5 +81,5 @@
     "watch": "clean && TSP_COMPILER_TS_PATH=./node_modules/@typescript/old tsc-watch -w -p ./tsconfig.build.json --compiler ./node_modules/.bin/tspc"
   },
   "types": "lib/index.d.ts",
-  "version": "10.1.7"
+  "version": "10.1.8"
 }
