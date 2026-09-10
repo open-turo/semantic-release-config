@@ -35,7 +35,7 @@
   },
   "overrides": {
     "eslint-plugin-sonarjs": {
-      "typescript": "6.0.3"
+      "typescript": "7.0.2"
     }
   },
   "engines": {
